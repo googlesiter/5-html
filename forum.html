@@ -1,0 +1,2980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FEDPromptly · FED Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+    <style>
+        /* ── Full CSS (unchanged from your original) ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --bg-body: #0b0b10;
+            --bg-card: #14141e;
+            --bg-card-hover: #1c1c2e;
+            --bg-input: #1e1e2f;
+            --bg-elevated: #282844;
+            --text-primary: #f0eef8;
+            --text-secondary: #b8b2d4;
+            --text-muted: #7a74a0;
+            --border-light: #2a2a42;
+            --border-medium: #3d3a5c;
+            --gradient-primary: linear-gradient(135deg, #7c5cfc, #a78bfa);
+            --shadow-glow: 0 0 30px rgba(139, 108, 247, 0.15);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.8);
+            --radius: 16px;
+            --radius-full: 9999px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --header-bg: linear-gradient(135deg, #0b0b10 0%, #1a0e2e 100%);
+            --body-radial: radial-gradient(circle at 10% 20%, rgba(139, 108, 247, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 122, 47, 0.03) 0%, transparent 50%);
+        }
+        [data-theme="light"] {
+            --bg-body: #f5f3ff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0edf9;
+            --bg-input: #f0edf9;
+            --bg-elevated: #e8e4f2;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4470;
+            --text-muted: #8a84a8;
+            --border-light: #d8d4e6;
+            --border-medium: #c4bed4;
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 30px rgba(139, 108, 247, 0.08);
+            --header-bg: linear-gradient(135deg, #f5f3ff 0%, #ede8fa 100%);
+            --body-radial: radial-gradient(circle at 10% 20%, rgba(139, 108, 247, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 122, 47, 0.05) 0%, transparent 50%);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            background-image: var(--body-radial);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 4px 8px;
+            border-radius: 50%;
+        }
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            transform: rotate(30deg);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            line-height: 1.4;
+            letter-spacing: 0.01em;
+        }
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(139, 108, 247, 0.35);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 32px rgba(139, 108, 247, 0.5);
+        }
+        .btn-primary:disabled {
+            background: var(--border-medium);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+        .btn-secondary:hover {
+            background: var(--border-light);
+            border-color: var(--border-medium);
+            transform: translateY(-1px);
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .btn-icon:hover {
+            color: var(--text-primary);
+            background: var(--bg-input);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .modal-card {
+            background: var(--bg-card);
+            border-radius: 1.5rem;
+            max-width: 420px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--border-light);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-card .close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+        .modal-card .close:hover {
+            color: var(--text-primary);
+        }
+        .modal-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .modal-card .sub {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .modal-card .form-group {
+            margin-bottom: 1rem;
+        }
+        .modal-card .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .modal-card .form-group input {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+        .modal-card .form-group input:focus {
+            outline: none;
+            border-color: #8b6cf7;
+            box-shadow: 0 0 0 3px rgba(139, 108, 247, 0.2);
+        }
+        .modal-card .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0 1.2rem;
+            font-size: 0.85rem;
+        }
+        .modal-card .form-options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .modal-card .form-options label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #8b6cf7;
+        }
+        .modal-card .form-options a {
+            color: #a78bfa;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .modal-card .form-options a:hover {
+            text-decoration: underline;
+        }
+        .modal-card .btn-primary {
+            width: 100%;
+            justify-content: center;
+            padding: 0.7rem;
+            font-size: 0.95rem;
+        }
+        .modal-card .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.2rem 0;
+        }
+        .modal-card .divider::before,
+        .modal-card .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-light);
+        }
+        .modal-card .divider span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal-card .toggle-auth {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+        .modal-card .toggle-auth button {
+            background: none;
+            border: none;
+            color: #a78bfa;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+        .modal-card .toggle-auth button:hover {
+            text-decoration: underline;
+        }
+        .modal-card .message {
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .modal-card .message.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid #ef4444;
+        }
+        .modal-card .message.success {
+            display: block;
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border: 1px solid #10b981;
+        }
+        .modal-card .message.info {
+            display: block;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            border: 1px solid #3b82f6;
+        }
+
+        /* ── Unified Nav (from index.html) ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 14px 0;
+            z-index: 1000;
+            background: rgba(7, 9, 15, 0.85);
+            backdrop-filter: blur(22px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        nav .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        nav .logo i {
+            -webkit-text-fill-color: var(--accent, #7c5cfc);
+            color: var(--accent, #7c5cfc);
+        }
+        nav .logo .badge {
+            font-size: 0.5rem;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            -webkit-text-fill-color: #fff;
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        .nav-links a.active {
+            color: var(--accent, #7c5cfc);
+        }
+        .nav-links .btn-outline {
+            background: transparent;
+            color: var(--accent, #7c5cfc);
+            border: 2px solid var(--accent, #7c5cfc);
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .nav-links .btn-outline:hover {
+            background: var(--accent, #7c5cfc);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ── Forum‑specific styles (unchanged) ── */
+        .forum-stats {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+        }
+        .forum-stats span {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .forum-main {
+            padding: 100px 0 60px;
+            background: transparent;
+            min-height: calc(100vh - 80px);
+        }
+        .forum-main .page-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 16px;
+        }
+        .forum-main .page-head h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .forum-main .page-head h1 i {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+        }
+        .forum-main .page-head .sort-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            border-radius: var(--radius-full);
+            padding: 8px 18px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+            transition: var(--transition);
+        }
+        .forum-main .page-head .sort-select:focus {
+            border-color: #8b6cf7;
+            box-shadow: 0 0 0 2px rgba(139, 108, 247, 0.2);
+        }
+        .search-bar {
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 8px 16px 8px 40px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .search-bar input:focus {
+            outline: none;
+            border-color: #8b6cf7;
+            box-shadow: 0 0 0 2px rgba(139, 108, 247, 0.15);
+        }
+        .search-bar i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        .reading-progress {
+            position: fixed;
+            top: 76px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--border-light);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .reading-progress.visible {
+            opacity: 1;
+        }
+        .reading-progress .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-primary);
+            transition: width 0.1s linear;
+            border-radius: 0 2px 2px 0;
+        }
+        .carousel-container {
+            margin-bottom: 28px;
+            position: relative;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .carousel-container .carousel-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .carousel-container .carousel-title i {
+            color: #a78bfa;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .carousel-slide {
+            min-width: 100%;
+            padding: 4px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .carousel-slide:hover {
+            opacity: 0.85;
+        }
+        .carousel-slide .slide-content {
+            background: var(--bg-input);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        .carousel-slide .slide-content:hover {
+            border-color: #8b6cf7;
+            box-shadow: var(--shadow-glow);
+        }
+        .carousel-slide .slide-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .carousel-slide .slide-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .carousel-slide .slide-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .carousel-dots .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border-medium);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+        }
+        .carousel-dots .dot.active {
+            background: #a78bfa;
+            box-shadow: 0 0 12px rgba(139, 108, 247, 0.5);
+        }
+        .carousel-dots .dot:hover {
+            background: var(--text-muted);
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+            z-index: 5;
+        }
+        .carousel-arrow:hover {
+            background: rgba(139, 108, 247, 0.6);
+            box-shadow: 0 0 20px rgba(139, 108, 247, 0.4);
+        }
+        .carousel-arrow.prev {
+            left: 8px;
+        }
+        .carousel-arrow.next {
+            right: 8px;
+        }
+        .carousel-arrow.hidden {
+            display: none;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+        .card:hover {
+            border-color: var(--border-medium);
+            box-shadow: var(--shadow-md);
+        }
+        .topic-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: var(--bg-input);
+            padding: 20px 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.4s ease forwards;
+            opacity: 0;
+        }
+        .topic-card::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: var(--radius);
+            padding: 2px;
+            background: conic-gradient(from 0deg, #7c5cfc, #a78bfa, #ff7a2f, #7c5cfc);
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            opacity: 0;
+            animation: spin 4s linear infinite;
+        }
+        .topic-card:hover::after {
+            opacity: 1;
+        }
+        @keyframes spin {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 300% 50%;
+            }
+        }
+        .topic-card:nth-child(1) { animation-delay: 0.05s; }
+        .topic-card:nth-child(2) { animation-delay: 0.10s; }
+        .topic-card:nth-child(3) { animation-delay: 0.15s; }
+        .topic-card:nth-child(4) { animation-delay: 0.20s; }
+        .topic-card:nth-child(5) { animation-delay: 0.25s; }
+        .topic-card:nth-child(6) { animation-delay: 0.30s; }
+        .topic-card:nth-child(7) { animation-delay: 0.35s; }
+        .topic-card:nth-child(8) { animation-delay: 0.40s; }
+        .topic-card:nth-child(9) { animation-delay: 0.45s; }
+        .topic-card:nth-child(10) { animation-delay: 0.50s; }
+        .topic-card:nth-child(11) { animation-delay: 0.55s; }
+        .topic-card:nth-child(12) { animation-delay: 0.60s; }
+        .topic-card:nth-child(13) { animation-delay: 0.65s; }
+        .topic-card:nth-child(14) { animation-delay: 0.70s; }
+        .topic-card:nth-child(15) { animation-delay: 0.75s; }
+        .topic-card:nth-child(16) { animation-delay: 0.80s; }
+        .topic-card:nth-child(17) { animation-delay: 0.85s; }
+        .topic-card:nth-child(18) { animation-delay: 0.90s; }
+        .topic-card:nth-child(19) { animation-delay: 0.95s; }
+        .topic-card:nth-child(20) { animation-delay: 1.00s; }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .topic-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-medium);
+            transform: translateY(-3px) scale(1.005);
+            box-shadow: var(--shadow-glow);
+        }
+        .topic-card .flex-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .topic-card .title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .topic-card .meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .topic-card .meta .profile-link {
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .topic-card .meta .profile-link:hover {
+            color: #a78bfa;
+            text-decoration: underline;
+        }
+        .topic-card .reply-count {
+            background: rgba(139, 108, 247, 0.15);
+            color: #a78bfa;
+            font-size: 0.7rem;
+            padding: 3px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .topic-card .reply-count i {
+            font-size: 0.65rem;
+        }
+        .topic-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .topic-card .excerpt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+        .topic-card .views-badge {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .topic-card .reading-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+        .bookmark-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .bookmark-btn:hover {
+            color: var(--text-primary);
+        }
+        .bookmark-btn.bookmarked {
+            color: #fbbf24;
+        }
+        .bookmark-btn.bookmarked:hover {
+            color: #f59e0b;
+        }
+        .tag-badge {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            padding: 0.15rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.6rem;
+            font-weight: 500;
+            display: inline-block;
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .tag-badge:hover {
+            border-color: #8b6cf7;
+            color: #a78bfa;
+        }
+        .tag-checkbox {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 0.4rem;
+            margin-bottom: 0.25rem;
+            background: var(--bg-input);
+            padding: 0.2rem 0.8rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border-light);
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .tag-checkbox:hover {
+            border-color: var(--border-medium);
+            background: var(--bg-elevated);
+        }
+        .tag-checkbox input {
+            margin-right: 0.3rem;
+            cursor: pointer;
+            accent-color: #8b6cf7;
+        }
+        .tag-cloud {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+        .tag-cloud h4 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .tag-cloud .tag-cloud-item {
+            display: inline-block;
+            margin: 4px;
+            padding: 2px 12px;
+            background: var(--bg-input);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .tag-cloud .tag-cloud-item:hover {
+            border-color: #8b6cf7;
+            color: #a78bfa;
+            transform: scale(1.05);
+        }
+        .tag-cloud .tag-cloud-item .tag-count {
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            margin-left: 2px;
+        }
+        .input-dark {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            padding: 0.6rem 0.9rem;
+            width: 100%;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        .input-dark:focus {
+            outline: none;
+            border-color: #8b6cf7;
+            box-shadow: 0 0 0 3px rgba(139, 108, 247, 0.15);
+        }
+        textarea.input-dark {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .char-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 2px;
+            transition: color 0.2s ease;
+        }
+        .char-counter.warning {
+            color: #fbbf24;
+        }
+        .char-counter.danger {
+            color: #ef4444;
+        }
+        .attachment-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            background: var(--bg-input);
+            min-height: 50px;
+            object-fit: contain;
+        }
+        .attachment-link {
+            color: #a78bfa;
+            text-decoration: underline;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .reply-item {
+            border-left: 3px solid var(--border-medium);
+            padding-left: 1.2rem;
+            background: var(--bg-input);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .reply-item:hover {
+            background: var(--bg-card-hover);
+            border-left-color: #8b6cf7;
+        }
+        .reply-item .reply-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .reply-item .reply-meta .name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .reply-item .reply-body {
+            margin-top: 6px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .profile-card .avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            box-shadow: 0 0 30px rgba(139, 108, 247, 0.3);
+        }
+        .profile-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .breadcrumbs {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+        .breadcrumbs a {
+            color: #a78bfa;
+            transition: var(--transition);
+        }
+        .breadcrumbs a:hover {
+            color: #c4b5fd;
+            text-decoration: underline;
+        }
+        .breadcrumbs .sep {
+            color: var(--text-muted);
+        }
+        .breadcrumbs .current {
+            color: var(--text-secondary);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .gap-1 {
+            gap: 4px;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .gap-3 {
+            gap: 12px;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mt-3 {
+            margin-top: 12px;
+        }
+        .mt-4 {
+            margin-top: 16px;
+        }
+        .mt-6 {
+            margin-top: 24px;
+        }
+        .mb-3 {
+            margin-bottom: 12px;
+        }
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        .text-xs {
+            font-size: 0.75rem;
+        }
+        .text-gray-400 {
+            color: var(--text-muted);
+        }
+        .text-gray-500 {
+            color: var(--text-secondary);
+        }
+        .text-gray-600 {
+            color: var(--text-secondary);
+        }
+        .text-gray-700 {
+            color: var(--text-secondary);
+        }
+        .text-gray-800 {
+            color: var(--text-primary);
+        }
+        .text-gray-900 {
+            color: var(--text-primary);
+        }
+        .text-red-400 {
+            color: #f87171;
+        }
+        .text-purple-600 {
+            color: #a78bfa;
+        }
+        .font-semibold {
+            font-weight: 600;
+        }
+        .font-bold {
+            font-weight: 700;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .py-8 {
+            padding-top: 32px;
+            padding-bottom: 32px;
+        }
+        .bg-gray-50 {
+            background: var(--bg-input);
+        }
+        .rounded-lg {
+            border-radius: var(--radius);
+        }
+        .whitespace-pre-wrap {
+            white-space: pre-wrap;
+        }
+        .hover\:underline:hover {
+            text-decoration: underline;
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        .self-end {
+            align-self: flex-end;
+        }
+        .flex-1 {
+            flex: 1;
+        }
+        .upload-error {
+            color: #f87171;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+        }
+        .upload-error.show {
+            display: block;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-heavy);
+        }
+        #loadMoreBtn {
+            margin-top: 20px;
+            width: 100%;
+            justify-content: center;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+            font-family: inherit;
+            cursor: pointer;
+        }
+        #loadMoreBtn:hover:not(:disabled) {
+            background: var(--border-light);
+            border-color: var(--border-medium);
+            transform: translateY(-2px);
+        }
+        #loadMoreBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-primary);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(139, 108, 247, 0.4);
+            transition: var(--transition);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            z-index: 999;
+        }
+        #backToTop.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+        #backToTop:hover {
+            transform: scale(1.1) translateY(-4px);
+            box-shadow: 0 8px 30px rgba(139, 108, 247, 0.6);
+        }
+        #stickyNewTopic {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            z-index: 998;
+            box-shadow: 0 4px 20px rgba(139, 108, 247, 0.4);
+            transition: var(--transition);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+        #stickyNewTopic.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+        #stickyNewTopic:hover {
+            transform: scale(1.05) translateY(-4px);
+            box-shadow: 0 8px 30px rgba(139, 108, 247, 0.6);
+        }
+        .keyboard-help {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-md);
+            z-index: 997;
+            opacity: 0;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+        .keyboard-help.visible {
+            opacity: 1;
+            pointer-events: none;
+        }
+        .keyboard-help kbd {
+            display: inline-block;
+            background: var(--bg-input);
+            padding: 0 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-light);
+            font-family: inherit;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+        }
+        @media (max-width: 640px) {
+            .forum-main .page-head h1 {
+                font-size: 1.6rem;
+            }
+            .forum-main .page-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .card {
+                padding: 16px 18px;
+            }
+            .topic-card {
+                padding: 14px 16px;
+            }
+            .modal-card {
+                padding: 1.5rem;
+                margin: 10px;
+            }
+            .carousel-arrow {
+                width: 28px;
+                height: 28px;
+                font-size: 0.9rem;
+            }
+            .carousel-arrow.prev {
+                left: 4px;
+            }
+            .carousel-arrow.next {
+                right: 4px;
+            }
+            .search-bar {
+                max-width: 100%;
+            }
+            .keyboard-help {
+                display: none;
+            }
+            .reading-progress {
+                top: 68px;
+            }
+            /* Nav responsive */
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-body);
+                padding: 20px;
+                gap: 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            }
+            .nav-links.is-open {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+            }
+            nav .container {
+                flex-wrap: wrap;
+            }
+            nav .logo {
+                font-size: 1.2rem;
+            }
+            nav .logo .badge {
+                font-size: 0.4rem;
+                padding: 1px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reading-progress" id="readingProgress">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- ── UNIFIED NAVIGATION (same as index.html) ── -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-bolt"></i> FED-OS
+                <span class="badge">BETA</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="forum.html" class="active">Forum</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="isp.html">ISP</a></li>
+                <li><a href="sr-pro.html">SR-Pro</a></li>
+                <li><a href="poster.html">Poster</a></li>
+                <li>
+                    <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" class="btn-outline btn-sm" style="display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:60px; border:2px solid var(--accent, #7c5cfc); color:var(--accent, #7c5cfc); font-weight:600; font-size:0.8rem; transition:var(--transition);">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                </li>
+                <!-- Extra: theme toggle + login (moved from forum header) -->
+                <li style="display:flex; align-items:center; gap:8px;">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    <button class="login-btn" id="loginBtn" style="background:none; border:2px solid #ff7a2f; color:#ff7a2f; padding:4px 16px; border-radius:60px; font-weight:600; font-size:0.8rem; display:flex; align-items:center; gap:6px; cursor:pointer; transition:var(--transition);">
+                        <span class="user-avatar" id="userAvatar" style="display:inline-block; width:26px; height:26px; border-radius:50%; background:rgba(139,108,247,0.2); color:#a78bfa; text-align:center; line-height:26px; font-size:12px; font-weight:700; overflow:hidden;">👤</span>
+                        <span id="loginBtnText">Login</span>
+                    </button>
+                </li>
+            </ul>
+            <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- ── MODAL (unchanged) ── -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-card">
+            <button class="close" id="closeModal">&times;</button>
+            <h2 id="modalTitle">Sign In</h2>
+            <p class="sub" id="modalSub">Enter your credentials to continue</p>
+            <form id="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required minlength="6" />
+                </div>
+                <div class="form-options">
+                    <label><input type="checkbox" id="rememberMe" checked /> Remember me</label>
+                    <a id="forgotPassword">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-primary" id="authSubmitBtn">Sign In</button>
+                <div id="authMessage" class="message"></div>
+                <div class="divider"><span>or</span></div>
+                <div class="toggle-auth">
+                    <span id="toggleText">New citizen?</span>
+                    <button type="button" id="toggleAuthMode">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── FORUM MAIN CONTENT (unchanged) ── -->
+    <main class="forum-main">
+        <div class="container">
+
+            <div class="page-head">
+                <div>
+                    <h1><i class="fas fa-comments"></i> FED-OS Forum</h1>
+                    <div id="forumStats" class="forum-stats">
+                        <i class="fas fa-eye" style="color: #a78bfa;"></i> Forum total views: <span id="forumViewCount">0</span>
+                        <span>• <span id="topicCount">0</span> topics</span>
+                        <span id="lastUpdated" style="font-size:0.75rem; color:var(--text-muted);"></span>
+                        <span id="activeUsersDisplay" style="font-size:0.75rem; color:var(--text-muted);"></span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3" style="flex-wrap:wrap;">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search topics..." aria-label="Search topics" />
+                    </div>
+                    <select id="sortSelect" class="sort-select" aria-label="Sort topics">
+                        <option value="latest">Latest</option>
+                        <option value="hot" selected>Hot</option>
+                        <option value="top">Top (likes)</option>
+                        <option value="most_commented">Most commented</option>
+                    </select>
+                    <button id="newTopicBtn" class="btn-primary" style="padding:10px 24px; font-size:0.95rem;">
+                        <i class="fas fa-plus"></i> New Topic
+                    </button>
+                </div>
+            </div>
+
+            <div id="carouselContainer" class="carousel-container hidden">
+                <div class="carousel-title">
+                    <i class="fas fa-fire"></i> Trending Now
+                </div>
+                <div class="carousel-track" id="carouselTrack"></div>
+                <div class="carousel-dots" id="carouselDots"></div>
+                <button class="carousel-arrow prev" id="carouselPrev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-arrow next" id="carouselNext" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div id="forumList" class="card">
+                <p class="text-gray-400 text-center py-8">Loading topics...</p>
+                <button id="loadMoreBtn" class="hidden">Load more</button>
+            </div>
+
+            <div id="tagCloud" class="tag-cloud hidden">
+                <h4>🏷️ Popular tags</h4>
+                <div id="tagCloudContent"></div>
+            </div>
+
+            <div id="newTopicForm" class="card hidden mt-4">
+                <h3 class="font-semibold text-gray-900 mb-3" style="font-size:1.2rem; display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-pen-fancy" style="color:#a78bfa;"></i> Create a New Topic
+                </h3>
+                <form id="createTopicForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="text-sm font-medium text-gray-700" for="topicTitle">Title</label>
+                        <input type="text" id="topicTitle" class="input-dark" placeholder="What's on your mind?" required aria-label="Topic title" maxlength="200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium text-gray-700" for="topicContent">Content</label>
+                        <textarea id="topicContent" rows="4" class="input-dark" placeholder="Share your thoughts..." required aria-label="Topic content" maxlength="10000"></textarea>
+                        <div class="char-counter" id="topicCharCounter">0 / 10000</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium text-gray-700">Tags (choose up to 5)</label>
+                        <div id="tagCheckboxes" class="flex flex-wrap gap-1 mt-1"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm font-medium text-gray-700" for="topicAttachment">Attach file (image, video, or zip)</label>
+                        <input type="file" id="topicAttachment" class="input-dark" accept="image/*,video/*,.zip" style="padding:6px;" aria-label="Attach file" />
+                        <p class="text-xs text-gray-500 mt-1">Max size: 10MB · Bucket: <strong>forum-attachments</strong></p>
+                        <p id="uploadError" class="upload-error"></p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="submit" class="btn-primary">Post Topic</button>
+                        <button type="button" id="cancelTopicBtn" class="btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="singleTopicView" class="card hidden mt-4">
+                <button id="backToForumBtn" class="text-purple-600 hover:underline mb-4 flex items-center gap-1" style="background:none; border:none; cursor:pointer; font-size:0.95rem;">
+                    <i class="fas fa-arrow-left"></i> Back to forum
+                </button>
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <a href="#" id="breadcrumbForum">Forum</a>
+                    <span class="sep">›</span>
+                    <span class="current" id="breadcrumbTopic">Topic</span>
+                    <span class="sep" id="breadcrumbSepReplies" style="display:none;">›</span>
+                    <span class="current" id="breadcrumbReplies" style="display:none;">Replies</span>
+                </div>
+                <div id="topicDetail">
+                    <h3 id="detailTitle" class="text-2xl font-bold text-gray-900"></h3>
+                    <p id="detailMeta" class="text-sm text-gray-500 mb-4"></p>
+                    <div id="detailAttachment" class="mb-4"></div>
+                    <div id="detailTags" class="mb-3 flex flex-wrap gap-1"></div>
+                    <div id="detailContent" class="bg-gray-50 p-4 rounded-lg mb-4 whitespace-pre-wrap text-gray-800"></div>
+                    <div id="detailStats" class="text-sm text-gray-500 mb-3 flex gap-4 flex-wrap">
+                        <span id="wordCountDisplay"></span>
+                        <span id="readingTimeDisplay"></span>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <button class="btn-icon" id="copyLinkBtn" title="Copy topic link" aria-label="Copy topic link"><i class="fas fa-link"></i></button>
+                        <button class="btn-icon" id="shareBtn" title="Share topic" aria-label="Share topic"><i class="fas fa-share-alt"></i></button>
+                    </div>
+                    <h4 class="font-semibold mb-3 text-gray-900" style="display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-reply-all" style="color:#a78bfa;"></i> Replies
+                    </h4>
+                    <div id="repliesList" class="space-y-3 mb-6"></div>
+                    <form id="replyForm" class="mt-4">
+                        <div class="flex gap-3">
+                            <textarea id="replyContent" rows="2" class="input-dark flex-1" placeholder="Write a reply..." required aria-label="Reply content" maxlength="5000"></textarea>
+                            <button type="submit" class="btn-primary self-end" style="padding:8px 20px;">Reply</button>
+                        </div>
+                        <div class="char-counter" id="replyCharCounter">0 / 5000</div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="profileView" class="hidden mt-4">
+                <button id="backFromProfileBtn" class="text-purple-600 hover:underline mb-4 flex items-center gap-1" style="background:none; border:none; cursor:pointer; font-size:0.95rem;">
+                    <i class="fas fa-arrow-left"></i> Back to forum
+                </button>
+                <div id="profileContent"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <button id="stickyNewTopic" class="btn-primary" style="padding:12px 20px; font-size:0.9rem; border-radius:50px;">
+        <i class="fas fa-plus"></i> New Topic
+    </button>
+
+    <button id="backToTop" title="Back to top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+
+    <div class="keyboard-help" id="keyboardHelp">
+        <kbd>N</kbd> New topic &nbsp;·&nbsp; <kbd>R</kbd> Reply &nbsp;·&nbsp; <kbd>?</kbd> Help
+    </div>
+
+    <!-- ── JAVASCRIPT (unchanged from your original) ── -->
+    <script>
+        const SUPABASE_URL = 'https://qyuczfpgydgqywgthgrz.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_2NLEuDREplLS9DgUXeA8Tw_f8MJOhCq';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let currentUser = null;
+        let isSignUp = false;
+        let currentTopicId = null;
+        let currentPage = 0;
+        const PAGE_SIZE = 20;
+        let hasMore = true;
+        let isLoading = false;
+        let currentSort = 'hot';
+        let allTopics = [];
+        let bookmarks = JSON.parse(localStorage.getItem('fedos_bookmarks') || '[]');
+
+        let carouselTopics = [];
+        let currentSlide = 0;
+        let autoSlideInterval = null;
+        const CAROUSEL_AUTO_INTERVAL = 5000;
+
+        // DOM refs (same as before)
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const loginForm = document.getElementById('loginForm');
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const authMessage = document.getElementById('authMessage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSub = document.getElementById('modalSub');
+        const toggleAuthMode = document.getElementById('toggleAuthMode');
+        const toggleText = document.getElementById('toggleText');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const userAvatar = document.getElementById('userAvatar');
+        const loginBtnText = document.getElementById('loginBtnText');
+
+        const forumList = document.getElementById('forumList');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const sortSelect = document.getElementById('sortSelect');
+        const newTopicBtn = document.getElementById('newTopicBtn');
+        const stickyNewTopic = document.getElementById('stickyNewTopic');
+        const newTopicForm = document.getElementById('newTopicForm');
+        const createTopicForm = document.getElementById('createTopicForm');
+        const topicTitle = document.getElementById('topicTitle');
+        const topicContent = document.getElementById('topicContent');
+        const topicCharCounter = document.getElementById('topicCharCounter');
+        const topicAttachment = document.getElementById('topicAttachment');
+        const cancelTopicBtn = document.getElementById('cancelTopicBtn');
+        const singleTopicView = document.getElementById('singleTopicView');
+        const backToForumBtn = document.getElementById('backToForumBtn');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailMeta = document.getElementById('detailMeta');
+        const detailContent = document.getElementById('detailContent');
+        const detailAttachment = document.getElementById('detailAttachment');
+        const detailTags = document.getElementById('detailTags');
+        const detailStats = document.getElementById('detailStats');
+        const repliesList = document.getElementById('repliesList');
+        const replyForm = document.getElementById('replyForm');
+        const replyContent = document.getElementById('replyContent');
+        const replyCharCounter = document.getElementById('replyCharCounter');
+        const tagCheckboxes = document.getElementById('tagCheckboxes');
+        const uploadError = document.getElementById('uploadError');
+        const profileView = document.getElementById('profileView');
+        const backFromProfileBtn = document.getElementById('backFromProfileBtn');
+        const profileContent = document.getElementById('profileContent');
+
+        const carouselContainer = document.getElementById('carouselContainer');
+        const carouselTrack = document.getElementById('carouselTrack');
+        const carouselDots = document.getElementById('carouselDots');
+        const carouselPrev = document.getElementById('carouselPrev');
+        const carouselNext = document.getElementById('carouselNext');
+
+        const topicCountEl = document.getElementById('topicCount');
+        const lastUpdatedEl = document.getElementById('lastUpdated');
+        const backToTopBtn = document.getElementById('backToTop');
+        const searchInput = document.getElementById('searchInput');
+        const breadcrumbs = document.getElementById('breadcrumbs');
+        const breadcrumbTopic = document.getElementById('breadcrumbTopic');
+        const breadcrumbReplies = document.getElementById('breadcrumbReplies');
+        const breadcrumbSepReplies = document.getElementById('breadcrumbSepReplies');
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const wordCountDisplay = document.getElementById('wordCountDisplay');
+        const readingTimeDisplay = document.getElementById('readingTimeDisplay');
+        const keyboardHelp = document.getElementById('keyboardHelp');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const readingProgress = document.getElementById('readingProgress');
+        const progressFill = document.getElementById('progressFill');
+        const tagCloud = document.getElementById('tagCloud');
+        const tagCloudContent = document.getElementById('tagCloudContent');
+        const activeUsersDisplay = document.getElementById('activeUsersDisplay');
+
+        const PREDEFINED_TAGS = [
+            'Artificial Intelligence', 'Machine Learning', 'Deep Learning',
+            'Natural Language Processing', 'Computer Vision', 'Data Science',
+            'Web Development', 'Mobile Development', 'Cloud Computing',
+            'Cybersecurity', 'Blockchain', 'Internet of Things'
+        ];
+
+        let currentTheme = localStorage.getItem('fedos_theme') || 'dark';
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            localStorage.setItem('fedos_theme', theme);
+        }
+        themeToggle.addEventListener('click', () => {
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+        setTheme(currentTheme);
+
+        // ── Auth (unchanged) ──
+        function showMessage(msg, type = 'error') {
+            authMessage.textContent = msg;
+            authMessage.className = 'message ' + type;
+        }
+
+        function hideMessage() {
+            authMessage.className = 'message';
+            authMessage.textContent = '';
+        }
+
+        function openModal() {
+            loginModal.classList.add('active');
+            hideMessage();
+            loginEmail.focus();
+        }
+
+        function closeModalFunc() {
+            loginModal.classList.remove('active');
+            hideMessage();
+        }
+
+        function updateUIForUser(user) {
+            if (user) {
+                loginBtn.classList.add('logged-in');
+                const name = user.email ? user.email.split('@')[0] : 'User';
+                loginBtnText.textContent = name;
+                userAvatar.textContent = name.charAt(0).toUpperCase();
+                loginBtn.title = 'Click to logout';
+            } else {
+                loginBtn.classList.remove('logged-in');
+                loginBtnText.textContent = 'Login';
+                userAvatar.textContent = '👤';
+                loginBtn.title = 'Click to login';
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await supabaseClient.auth.signOut();
+                currentUser = null;
+                updateUIForUser(null);
+                resetAndLoad();
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
+        }
+
+        loginBtn.addEventListener('click', function() {
+            if (currentUser) {
+                if (confirm('Logout?')) {
+                    handleLogout();
+                }
+                return;
+            }
+            openModal();
+        });
+
+        closeModal.addEventListener('click', closeModalFunc);
+        loginModal.addEventListener('click', function(e) {
+            if (e.target === loginModal) closeModalFunc();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && loginModal.classList.contains('active')) closeModalFunc();
+        });
+
+        toggleAuthMode.addEventListener('click', function() {
+            isSignUp = !isSignUp;
+            if (isSignUp) {
+                modalTitle.textContent = 'Create Account';
+                modalSub.textContent = 'Join the community';
+                authSubmitBtn.textContent = 'Sign Up';
+                toggleAuthMode.textContent = 'Sign In';
+                toggleText.textContent = 'Already a citizen?';
+            } else {
+                modalTitle.textContent = 'Sign In';
+                modalSub.textContent = 'Enter your credentials to continue';
+                authSubmitBtn.textContent = 'Sign In';
+                toggleAuthMode.textContent = 'Sign Up';
+                toggleText.textContent = 'New citizen?';
+            }
+            hideMessage();
+            loginForm.reset();
+        });
+
+        forgotPassword.addEventListener('click', async function() {
+            const email = loginEmail.value.trim();
+            if (!email) {
+                showMessage('Please enter your email address first.', 'error');
+                return;
+            }
+            try {
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + window.location.pathname,
+                });
+                if (error) throw error;
+                showMessage('📧 Password reset email sent! Check your inbox.', 'info');
+            } catch (err) {
+                showMessage(err.message || 'Failed to send reset email.', 'error');
+            }
+        });
+
+        async function handleLogin(email, password) {
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                showMessage(`✅ Welcome back, ${email.split('@')[0]}!`, 'success');
+                currentUser = data.user;
+                updateUIForUser(currentUser);
+                setTimeout(closeModalFunc, 1000);
+                resetAndLoad();
+            } catch (err) {
+                let msg = err.message;
+                if (err.message.includes('Invalid login credentials')) msg = 'Invalid email or password.';
+                else if (err.message.includes('Email not confirmed')) msg = 'Please verify your email address first.';
+                showMessage(msg, 'error');
+                throw err;
+            }
+        }
+
+        async function handleSignUp(email, password) {
+            try {
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: { emailRedirectTo: window.location.origin + window.location.pathname }
+                });
+                if (error) throw error;
+                if (data.user && data.user.identities && data.user.identities.length === 0) {
+                    showMessage('This email is already registered. Please sign in.', 'error');
+                    return;
+                }
+                if (!data.session) {
+                    showMessage('📧 Please check your email to confirm your account.', 'info');
+                } else {
+                    showMessage(`✅ Account created! Welcome, ${email.split('@')[0]}!`, 'success');
+                    currentUser = data.user;
+                    updateUIForUser(currentUser);
+                    setTimeout(closeModalFunc, 1000);
+                    resetAndLoad();
+                }
+            } catch (err) {
+                let msg = err.message;
+                if (err.message.includes('User already registered')) msg = 'This email is already registered. Please sign in.';
+                showMessage(msg, 'error');
+                throw err;
+            }
+        }
+
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+            if (!email || !password) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+            authSubmitBtn.disabled = true;
+            authSubmitBtn.textContent = isSignUp ? 'Creating...' : 'Signing in...';
+            hideMessage();
+            try {
+                if (isSignUp) {
+                    await handleSignUp(email, password);
+                } else {
+                    await handleLogin(email, password);
+                }
+            } catch (err) {} finally {
+                authSubmitBtn.disabled = false;
+                authSubmitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+            }
+        });
+
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                currentUser = session.user;
+                updateUIForUser(currentUser);
+                closeModalFunc();
+                resetAndLoad();
+            }
+            if (event === 'SIGNED_OUT') {
+                currentUser = null;
+                updateUIForUser(null);
+                resetAndLoad();
+            }
+            if (event === 'USER_UPDATED' && session) {
+                currentUser = session.user;
+                updateUIForUser(currentUser);
+            }
+        });
+
+        (async function checkSession() {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    currentUser = session.user;
+                    updateUIForUser(currentUser);
+                }
+                resetAndLoad();
+            } catch (err) {
+                console.error('Session check error:', err);
+                resetAndLoad();
+            }
+        })();
+
+        // ── Bookmark functions ──
+        function toggleBookmark(topicId) {
+            const index = bookmarks.indexOf(topicId);
+            if (index > -1) {
+                bookmarks.splice(index, 1);
+            } else {
+                bookmarks.push(topicId);
+            }
+            localStorage.setItem('fedos_bookmarks', JSON.stringify(bookmarks));
+            updateBookmarkButtons();
+        }
+
+        function isBookmarked(topicId) {
+            return bookmarks.includes(topicId);
+        }
+
+        function updateBookmarkButtons() {
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                const id = btn.dataset.topicId;
+                if (id && isBookmarked(id)) {
+                    btn.classList.add('bookmarked');
+                    btn.innerHTML = '<i class="fas fa-bookmark"></i>';
+                } else {
+                    btn.classList.remove('bookmarked');
+                    btn.innerHTML = '<i class="far fa-bookmark"></i>';
+                }
+            });
+        }
+
+        // ── Counter functions ──
+        async function refreshForumViewCount() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('forum_stats')
+                    .select('total_views')
+                    .eq('id', 1)
+                    .single();
+                if (error) throw error;
+                const el = document.getElementById('forumViewCount');
+                if (el) el.textContent = data.total_views || 0;
+            } catch (err) {
+                console.warn('Forum views fetch failed:', err);
+            }
+        }
+
+        async function countForumView() {
+            if (sessionStorage.getItem('forum_viewed_session')) return;
+            try {
+                const { data, error } = await supabaseClient.rpc('increment_forum_views');
+                if (error) throw error;
+                sessionStorage.setItem('forum_viewed_session', 'true');
+                const el = document.getElementById('forumViewCount');
+                if (el) el.textContent = data ?? 0;
+            } catch (err) {
+                console.error('Forum view increment failed:', err);
+            }
+        }
+
+        // ── countTopicView – no fallback, shows real error ──
+        async function countTopicView(topicId) {
+            const key = `topic_viewed_${topicId}`;
+            if (sessionStorage.getItem(key)) return;
+
+            try {
+                const { data, error } = await supabaseClient.rpc('increment_topic_views', {
+                    p_topic_id: topicId
+                });
+                if (error) {
+                    alert(`View counter error: ${error.message}`);
+                    throw error;
+                }
+                sessionStorage.setItem(key, 'true');
+                const viewEl = document.getElementById('topicViewCount');
+                if (viewEl) viewEl.textContent = data ?? 0;
+                updateTopicListViews(topicId, data ?? 0);
+            } catch (err) {
+                console.error('Topic view increment failed:', err);
+                alert(`View counter failed: ${err.message || 'unknown error'}`);
+            }
+        }
+
+        function updateTopicListViews(topicId, newCount) {
+            const cards = document.querySelectorAll('.topic-card');
+            for (const card of cards) {
+                if (card.dataset.topicId == topicId) {
+                    const badge = card.querySelector('.views-badge');
+                    if (badge) badge.textContent = `👁️ ${newCount}`;
+                    break;
+                }
+            }
+        }
+
+        // ── Sorting, reading time, etc. ──
+        function sortTopics(topics, sortBy) {
+            const now = Date.now();
+            const sorted = [...topics];
+            switch (sortBy) {
+                case 'latest':
+                    sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    break;
+                case 'top':
+                    sorted.sort((a, b) => (b.like_count || 0) - (a.like_count || 0));
+                    break;
+                case 'most_commented':
+                    sorted.sort((a, b) => (b.replyCount || 0) - (a.replyCount || 0));
+                    break;
+                case 'hot':
+                default:
+                    sorted.sort((a, b) => {
+                        const aAge = (now - new Date(a.created_at).getTime()) / (1000 * 60 * 60);
+                        const bAge = (now - new Date(b.created_at).getTime()) / (1000 * 60 * 60);
+                        const aScore = (a.like_count || 0) + (a.views || 0) / 10 - aAge / 4;
+                        const bScore = (b.like_count || 0) + (b.views || 0) / 10 - bAge / 4;
+                        return bScore - aScore;
+                    });
+                    break;
+            }
+            return sorted;
+        }
+
+        function getReadingTime(text) {
+            const words = text.trim().split(/\s+/).length;
+            const mins = Math.ceil(words / 200);
+            return { words, mins };
+        }
+
+        function updateActiveUsers(topics) {
+            if (!topics || !topics.length) {
+                activeUsersDisplay.textContent = '';
+                return;
+            }
+            const users = new Set();
+            const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+            topics.forEach(t => {
+                if (new Date(t.created_at).getTime() > oneDayAgo) {
+                    users.add(t.user_id);
+                }
+            });
+            if (users.size > 0) {
+                activeUsersDisplay.textContent = `• 👥 ${users.size} active today`;
+            } else {
+                activeUsersDisplay.textContent = '';
+            }
+        }
+
+        function buildTagCloud(topics) {
+            const tagCounts = {};
+            topics.forEach(t => {
+                if (t.tags) {
+                    t.tags.forEach(tag => {
+                        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                    });
+                }
+            });
+            const sorted = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 20);
+            if (sorted.length < 2) {
+                tagCloud.classList.add('hidden');
+                return;
+            }
+            tagCloud.classList.remove('hidden');
+            tagCloudContent.innerHTML = sorted.map(([tag, count]) =>
+                `<span class="tag-cloud-item" data-tag="${tag}">${tag} <span class="tag-count">(${count})</span></span>`
+            ).join('');
+            document.querySelectorAll('.tag-cloud-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    searchInput.value = el.dataset.tag;
+                    filterTopics(el.dataset.tag);
+                });
+            });
+        }
+
+        // ── Carousel (no hearts) ──
+        function buildCarousel(topics) {
+            const sorted = [...topics].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            carouselTopics = sorted.slice(0, 10);
+            if (carouselTopics.length < 2) {
+                carouselContainer.classList.add('hidden');
+                return;
+            }
+            carouselContainer.classList.remove('hidden');
+            carouselTrack.innerHTML = '';
+            carouselTopics.forEach(topic => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.dataset.topicId = topic.id;
+                slide.innerHTML = `
+                            <div class="slide-content">
+                                <div class="slide-title">${topic.title}</div>
+                                <div class="slide-meta">
+                                    <span><i class="fas fa-reply"></i> ${topic.replyCount || 0}</span>
+                                    <span><i class="fas fa-eye"></i> ${topic.views || 0}</span>
+                                </div>
+                            </div>
+                        `;
+                slide.addEventListener('click', () => {
+                    showTopicDetail(topic.id);
+                });
+                carouselTrack.appendChild(slide);
+            });
+            carouselDots.innerHTML = '';
+            for (let i = 0; i < carouselTopics.length; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.dataset.index = i;
+                dot.addEventListener('click', () => goToSlide(i));
+                carouselDots.appendChild(dot);
+            }
+            const hasMultiple = carouselTopics.length > 1;
+            carouselPrev.classList.toggle('hidden', !hasMultiple);
+            carouselNext.classList.toggle('hidden', !hasMultiple);
+            currentSlide = 0;
+            updateCarouselPosition();
+            startAutoSlide();
+        }
+
+        function updateCarouselPosition() {
+            const slideWidth = 100;
+            carouselTrack.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+            const dots = carouselDots.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            if (index < 0) index = carouselTopics.length - 1;
+            if (index >= carouselTopics.length) index = 0;
+            currentSlide = index;
+            updateCarouselPosition();
+            resetAutoSlide();
+        }
+
+        function nextSlide() { goToSlide(currentSlide + 1); }
+
+        function prevSlide() { goToSlide(currentSlide - 1); }
+
+        function startAutoSlide() {
+            stopAutoSlide();
+            if (carouselTopics.length > 1) {
+                autoSlideInterval = setInterval(nextSlide, CAROUSEL_AUTO_INTERVAL);
+            }
+        }
+
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = null;
+            }
+        }
+
+        function resetAutoSlide() { startAutoSlide(); }
+
+        carouselNext.addEventListener('click', (e) => { e.stopPropagation();
+            nextSlide(); });
+        carouselPrev.addEventListener('click', (e) => { e.stopPropagation();
+            prevSlide(); });
+        carouselContainer.addEventListener('mouseenter', stopAutoSlide);
+        carouselContainer.addEventListener('mouseleave', startAutoSlide);
+
+        // ── Search ──
+        let searchQuery = '';
+
+        function filterTopics(query) {
+            searchQuery = query.toLowerCase().trim();
+            if (!searchQuery) {
+                renderTopicList(allTopics, false);
+                return;
+            }
+            const filtered = allTopics.filter(t =>
+                t.title.toLowerCase().includes(searchQuery) ||
+                t.content.toLowerCase().includes(searchQuery) ||
+                (t.tags && t.tags.some(tag => tag.toLowerCase().includes(searchQuery)))
+            );
+            renderTopicList(filtered, false);
+        }
+
+        searchInput.addEventListener('input', debounce(function() {
+            filterTopics(this.value);
+        }, 300));
+
+        function debounce(fn, delay) {
+            let timer;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        // ── Char counter ──
+        function updateCharCounter(textarea, display, max) {
+            const len = textarea.value.length;
+            display.textContent = `${len} / ${max}`;
+            display.classList.toggle('warning', len > max * 0.8);
+            display.classList.toggle('danger', len > max * 0.95);
+        }
+
+        topicContent.addEventListener('input', () => updateCharCounter(topicContent, topicCharCounter, 10000));
+        replyContent.addEventListener('input', () => updateCharCounter(replyContent, replyCharCounter, 5000));
+
+        // ── Reading progress ──
+        function updateReadingProgress() {
+            if (singleTopicView.classList.contains('hidden')) {
+                readingProgress.classList.remove('visible');
+                return;
+            }
+            const detailEl = document.getElementById('topicDetail');
+            if (!detailEl) return;
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(progress, 100)}%`;
+            if (progress > 2 && !readingProgress.classList.contains('visible')) {
+                readingProgress.classList.add('visible');
+            } else if (progress < 2 && readingProgress.classList.contains('visible')) {
+                readingProgress.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', updateReadingProgress);
+
+        // ── Update metrics ──
+        function updateMetrics(topics) {
+            if (topicCountEl) {
+                topicCountEl.textContent = topics.length;
+            }
+            if (lastUpdatedEl && topics.length > 0) {
+                const latest = topics.reduce((a, b) => new Date(a.created_at) > new Date(b.created_at) ? a : b);
+                const diff = Date.now() - new Date(latest.created_at).getTime();
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(diff / 3600000);
+                const days = Math.floor(diff / 86400000);
+                let label = 'just now';
+                if (days > 0) label = `${days}d ago`;
+                else if (hours > 0) label = `${hours}h ago`;
+                else if (minutes > 0) label = `${minutes}m ago`;
+                lastUpdatedEl.textContent = `🕐 Last updated: ${label}`;
+            } else if (lastUpdatedEl) {
+                lastUpdatedEl.textContent = '';
+            }
+            updateActiveUsers(topics);
+            buildTagCloud(topics);
+            updateBookmarkButtons();
+        }
+
+        // ── Render topic list (no hearts) ──
+        function renderTopicList(topics, append = false) {
+            const sorted = sortTopics(topics, currentSort);
+            if (!append) {
+                forumList.innerHTML = '';
+            }
+            if (!sorted.length) {
+                if (!append) {
+                    forumList.innerHTML =
+                        `<p class="text-gray-400 text-center py-8">${searchQuery ? 'No topics match your search.' : 'No topics yet. Be the first to start a discussion!'}</p>`;
+                }
+                return;
+            }
+            let html = '';
+            sorted.forEach(topic => {
+                const displayName = topic.profiles?.username || topic.profiles?.email || 'Unknown';
+                const date = new Date(topic.created_at).toLocaleDateString();
+                const tags = topic.tags || [];
+                const tagHtml = tags.map(t => `<span class="tag-badge">${t}</span>`).join('');
+                const attachmentIcon = topic.attachment_url ?
+                    '<i class="fas fa-paperclip text-gray-500 ml-1"></i>' : '';
+                const views = topic.views || 0;
+                const replyCount = topic.replyCount || 0;
+                const reading = getReadingTime(topic.content);
+                const readingLabel = reading.mins > 0 ? `${reading.mins} min read` : '';
+                const bookmarked = isBookmarked(topic.id);
+                html += `
+                            <div class="topic-card" data-topic-id="${topic.id}">
+                                <div class="flex-row">
+                                    <div>
+                                        <div class="title">
+                                            ${topic.title}
+                                            ${attachmentIcon}
+                                            <button class="bookmark-btn ${bookmarked ? 'bookmarked' : ''}" data-topic-id="${topic.id}" title="Bookmark">
+                                                <i class="${bookmarked ? 'fas' : 'far'} fa-bookmark"></i>
+                                            </button>
+                                        </div>
+                                        <div class="meta">
+                                            <i class="fas fa-user" style="font-size:0.7rem;"></i>
+                                            <a href="#" class="profile-link" data-user-id="${topic.user_id}" style="color: var(--text-secondary);">${displayName}</a>
+                                            <i class="fas fa-calendar-alt" style="font-size:0.7rem; margin-left:6px;"></i> ${date}
+                                            ${readingLabel ? `<span class="reading-time">· ${readingLabel}</span>` : ''}
+                                        </div>
+                                        <div class="tags">${tagHtml}</div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="reply-count"><i class="fas fa-reply"></i> ${replyCount}</span>
+                                        <span class="views-badge"><i class="fas fa-eye"></i> ${views}</span>
+                                    </div>
+                                </div>
+                                <div class="excerpt">${topic.content}</div>
+                            </div>
+                        `;
+            });
+            if (append) {
+                forumList.insertAdjacentHTML('beforeend', html);
+            } else {
+                forumList.innerHTML = html;
+                forumList.appendChild(loadMoreBtn);
+            }
+
+            // Bookmarks
+            forumList.querySelectorAll('.bookmark-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = btn.dataset.topicId;
+                    toggleBookmark(id);
+                });
+            });
+
+            // Profile links
+            forumList.querySelectorAll('.profile-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const userId = link.dataset.userId;
+                    showProfile(userId);
+                });
+            });
+
+            // Topic card click
+            forumList.querySelectorAll('.topic-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = card.dataset.topicId;
+                    showTopicDetail(id);
+                });
+            });
+
+            loadMoreBtn.classList.remove('hidden');
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = hasMore ? 'Load more' : 'No more topics';
+            if (!append && !searchQuery && allTopics.length) {
+                buildCarousel(allTopics);
+            }
+            updateMetrics(allTopics);
+        }
+
+        // ── Load topics ──
+        async function loadTopics(page = 0, append = false) {
+            if (isLoading) return;
+            isLoading = true;
+            loadMoreBtn.disabled = true;
+            try {
+                const from = page * PAGE_SIZE;
+                const to = from + PAGE_SIZE - 1;
+                const { data: topics, error } = await supabaseClient
+                    .from('topics')
+                    .select(`
+                                id, title, content, created_at, user_id, attachment_url, tags, views,
+                                profiles ( username, email ),
+                                reply_count:replies(count)
+                            `)
+                    .order('created_at', { ascending: false })
+                    .range(from, to);
+                if (error) throw error;
+                const transformed = topics.map(t => ({
+                    ...t,
+                    replyCount: t.reply_count?.[0]?.count ?? 0
+                }));
+                if (append) {
+                    allTopics = [...allTopics, ...transformed];
+                } else {
+                    allTopics = transformed;
+                }
+                hasMore = topics.length === PAGE_SIZE;
+                if (!append) {
+                    setCachedTopics(allTopics);
+                }
+                if (searchQuery) {
+                    filterTopics(searchQuery);
+                } else {
+                    renderTopicList(transformed, append);
+                }
+                loadMoreBtn.classList.toggle('hidden', !hasMore);
+            } catch (err) {
+                console.error('Error loading topics:', err);
+                if (!append) {
+                    forumList.innerHTML = `<p class="text-red-400 text-center py-8">Failed to load topics.</p>`;
+                }
+            } finally {
+                isLoading = false;
+                loadMoreBtn.disabled = false;
+                if (!hasMore) {
+                    loadMoreBtn.textContent = 'No more topics';
+                    loadMoreBtn.disabled = true;
+                } else {
+                    loadMoreBtn.textContent = 'Load more';
+                }
+            }
+        }
+
+        function resetAndLoad() {
+            currentPage = 0;
+            hasMore = true;
+            searchQuery = '';
+            searchInput.value = '';
+            const cached = getCachedTopics();
+            if (cached && cached.length > 0) {
+                allTopics = cached;
+                renderTopicList(cached, false);
+                loadTopics(0, false);
+            } else {
+                loadTopics(0, false);
+            }
+            countForumView();
+        }
+
+        // ── Caching ──
+        const CACHE_KEY = 'forum_topics_cache';
+        const CACHE_TTL = 5 * 60 * 1000;
+
+        function getCachedTopics() {
+            try {
+                const raw = sessionStorage.getItem(CACHE_KEY);
+                if (!raw) return null;
+                const { data, timestamp } = JSON.parse(raw);
+                if (Date.now() - timestamp > CACHE_TTL) {
+                    sessionStorage.removeItem(CACHE_KEY);
+                    return null;
+                }
+                return data;
+            } catch { return null; }
+        }
+
+        function setCachedTopics(data) {
+            try {
+                sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
+            } catch (e) {}
+        }
+
+        // ── Drafts ──
+        const DRAFT_KEY = 'fedos_draft';
+        const REPLY_DRAFT_KEY = 'fedos_reply_draft';
+
+        function loadDrafts() {
+            try {
+                const draft = JSON.parse(localStorage.getItem(DRAFT_KEY));
+                if (draft) {
+                    topicTitle.value = draft.title || '';
+                    topicContent.value = draft.content || '';
+                    if (draft.tags) {
+                        document.querySelectorAll('input[name="tags"]').forEach(cb => {
+                            cb.checked = draft.tags.includes(cb.value);
+                        });
+                    }
+                }
+                const replyDraft = localStorage.getItem(REPLY_DRAFT_KEY);
+                if (replyDraft) {
+                    replyContent.value = replyDraft;
+                    updateCharCounter(replyContent, replyCharCounter, 5000);
+                }
+            } catch (e) {}
+        }
+
+        function saveDraft() {
+            const tags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(el => el.value);
+            localStorage.setItem(DRAFT_KEY, JSON.stringify({
+                title: topicTitle.value,
+                content: topicContent.value,
+                tags: tags
+            }));
+        }
+
+        function saveReplyDraft() {
+            localStorage.setItem(REPLY_DRAFT_KEY, replyContent.value);
+        }
+
+        function clearDrafts() {
+            localStorage.removeItem(DRAFT_KEY);
+            localStorage.removeItem(REPLY_DRAFT_KEY);
+        }
+
+        topicTitle.addEventListener('input', saveDraft);
+        topicContent.addEventListener('input', saveDraft);
+        document.querySelectorAll('input[name="tags"]').forEach(cb => {
+            cb.addEventListener('change', saveDraft);
+        });
+        replyContent.addEventListener('input', saveReplyDraft);
+
+        function renderTagCheckboxes() {
+            let html = '';
+            PREDEFINED_TAGS.forEach(tag => {
+                html += `
+                            <label class="tag-checkbox">
+                                <input type="checkbox" name="tags" value="${tag}" />
+                                ${tag}
+                            </label>
+                        `;
+            });
+            tagCheckboxes.innerHTML = html;
+            document.querySelectorAll('input[name="tags"]').forEach(cb => {
+                cb.addEventListener('change', saveDraft);
+            });
+        }
+        renderTagCheckboxes();
+
+        // ── New topic ──
+        newTopicBtn.addEventListener('click', () => {
+            if (!currentUser) {
+                alert('Please log in to create a new topic.');
+                openModal();
+                return;
+            }
+            newTopicForm.classList.toggle('hidden');
+            if (!newTopicForm.classList.contains('hidden')) {
+                topicTitle.focus();
+                loadDrafts();
+                updateCharCounter(topicContent, topicCharCounter, 10000);
+            }
+        });
+
+        stickyNewTopic.addEventListener('click', () => {
+            newTopicBtn.click();
+        });
+
+        cancelTopicBtn.addEventListener('click', () => {
+            newTopicForm.classList.add('hidden');
+            createTopicForm.reset();
+            uploadError.classList.remove('show');
+            uploadError.textContent = '';
+            clearDrafts();
+            updateCharCounter(topicContent, topicCharCounter, 10000);
+        });
+
+        createTopicForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = topicTitle.value.trim();
+            const content = topicContent.value.trim();
+            const selectedTags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(el => el
+            .value);
+            const file = topicAttachment.files[0];
+            if (!title || !content) {
+                alert('Title and content are required.');
+                return;
+            }
+            if (!currentUser) {
+                alert('You must be logged in to post.');
+                openModal();
+                return;
+            }
+            const submitButton = createTopicForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Posting...';
+            uploadError.classList.remove('show');
+            uploadError.textContent = '';
+            try {
+                let attachmentUrl = null;
+                if (file) {
+                    if (file.size > 10 * 1024 * 1024) {
+                        uploadError.textContent = 'File size exceeds 10MB limit.';
+                        uploadError.classList.add('show');
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Post Topic';
+                        return;
+                    }
+                    const fileExt = file.name.split('.').pop();
+                    const filePath = `${currentUser.id}/${Date.now()}.${fileExt}`;
+                    const { error: uploadErr } = await supabaseClient.storage
+                        .from('forum-attachments')
+                        .upload(filePath, file, { cacheControl: '3600', upsert: false });
+                    if (uploadErr) {
+                        if (uploadErr.message.includes('bucket not found')) {
+                            uploadError.textContent =
+                                'Storage bucket "forum-attachments" not found. Please create it in Supabase dashboard.';
+                            uploadError.classList.add('show');
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Post Topic';
+                            return;
+                        }
+                        throw uploadErr;
+                    }
+                    const { data: urlData } = supabaseClient.storage
+                        .from('forum-attachments')
+                        .getPublicUrl(filePath);
+                    attachmentUrl = urlData.publicUrl;
+                }
+                const { error } = await supabaseClient
+                    .from('topics')
+                    .insert({
+                        title,
+                        content,
+                        user_id: currentUser.id,
+                        attachment_url: attachmentUrl,
+                        tags: selectedTags.length ? selectedTags : null,
+                    });
+                if (error) throw error;
+                if (window.confetti) {
+                    window.confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+                createTopicForm.reset();
+                newTopicForm.classList.add('hidden');
+                clearDrafts();
+                sessionStorage.removeItem(CACHE_KEY);
+                resetAndLoad();
+            } catch (err) {
+                console.error('Error creating topic:', err);
+                alert('Failed to create topic: ' + err.message);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Post Topic';
+            }
+        });
+
+        // ── showTopicDetail with self‑view fix ──
+        async function showTopicDetail(topicId) {
+            if (window.repliesSubscription) window.repliesSubscription.unsubscribe();
+            currentTopicId = topicId;
+            console.log(`📂 Opening topic detail for ID: ${topicId}`);
+            try {
+                const { data: topic, error: topicErr } = await supabaseClient
+                    .from('topics')
+                    .select(`
+                                id, title, content, created_at,
+                                user_id, attachment_url, tags, views,
+                                profiles ( username, email )
+                            `)
+                    .eq('id', topicId)
+                    .single();
+                if (topicErr) throw topicErr;
+                const { data: replies, error: repliesErr } = await supabaseClient
+                    .from('replies')
+                    .select(`
+                                id, content, created_at,
+                                user_id,
+                                profiles ( username, email )
+                            `)
+                    .eq('topic_id', topicId)
+                    .order('created_at', { ascending: true });
+                if (repliesErr) throw repliesErr;
+                detailTitle.textContent = topic.title;
+                const displayName = topic.profiles?.username || topic.profiles?.email || 'Unknown';
+                const date = new Date(topic.created_at).toLocaleString();
+                const views = topic.views || 0;
+                detailMeta.innerHTML =
+                    `By ${displayName} · ${date} · 👁️ <span id="topicViewCount">${views}</span> views`;
+                detailContent.textContent = topic.content;
+                const { words, mins } = getReadingTime(topic.content);
+                wordCountDisplay.textContent = `📝 ${words} words`;
+                readingTimeDisplay.textContent = `⏱️ ${mins > 0 ? mins : '<1'} min read`;
+                breadcrumbTopic.textContent = topic.title.length > 30 ? topic.title.slice(0, 30) + '…' : topic.title;
+                breadcrumbReplies.style.display = replies.length > 0 ? 'inline' : 'none';
+                breadcrumbSepReplies.style.display = replies.length > 0 ? 'inline' : 'none';
+                breadcrumbReplies.textContent = `${replies.length} replies`;
+                document.getElementById('breadcrumbForum').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    backToForumBtn.click();
+                });
+                if (topic.attachment_url) {
+                    const url = topic.attachment_url;
+                    const ext = url.split('.').pop().toLowerCase();
+                    let html = '';
+                    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) {
+                        html = `<img src="${url}" alt="Attachment" class="attachment-preview" loading="lazy" />`;
+                    } else if (['mp4', 'webm', 'ogg'].includes(ext)) {
+                        html =
+                            `<video controls class="attachment-preview" preload="metadata"><source src="${url}" type="video/${ext}"></video>`;
+                    } else if (ext === 'zip') {
+                        html =
+                            `<a href="${url}" target="_blank" class="attachment-link"><i class="fas fa-file-archive"></i> Download ZIP</a>`;
+                    } else {
+                        html =
+                            `<a href="${url}" target="_blank" class="attachment-link"><i class="fas fa-file"></i> Download attachment</a>`;
+                    }
+                    detailAttachment.innerHTML = html;
+                } else {
+                    detailAttachment.innerHTML = '';
+                }
+                const tags = topic.tags || [];
+                detailTags.innerHTML = tags.map(t => `<span class="tag-badge">${t}</span>`).join('');
+                if (replies.length === 0) {
+                    repliesList.innerHTML =
+                        `<p class="text-gray-400 text-sm">No replies yet. Be the first to respond!</p>`;
+                } else {
+                    let html = '';
+                    replies.forEach(reply => {
+                        const replyName = reply.profiles?.username || reply.profiles?.email || 'Unknown';
+                        const replyDate = new Date(reply.created_at).toLocaleString();
+                        html += `
+                                    <div class="reply-item" data-reply-id="${reply.id}">
+                                        <div class="reply-meta">
+                                            <span class="name">${replyName}</span>
+                                            <span>${replyDate}</span>
+                                        </div>
+                                        <div class="reply-body">${reply.content}</div>
+                                    </div>
+                                `;
+                    });
+                    repliesList.innerHTML = html;
+                }
+                forumList.style.display = 'none';
+                newTopicForm.classList.add('hidden');
+                singleTopicView.classList.remove('hidden');
+                profileView.classList.add('hidden');
+                carouselContainer.classList.add('hidden');
+                stickyNewTopic.classList.remove('visible');
+                copyLinkBtn.onclick = function() {
+                    navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?topic=' +
+                        topicId)
+                        .then(() => alert('Link copied!'))
+                        .catch(() => alert('Copy failed.'));
+                };
+                shareBtn.onclick = function() {
+                    const shareData = {
+                        title: topic.title,
+                        text: topic.content.slice(0, 200) + '…',
+                        url: window.location.origin + window.location.pathname + '?topic=' + topicId
+                    };
+                    if (navigator.share) {
+                        navigator.share(shareData).catch(() => {});
+                    } else {
+                        navigator.clipboard.writeText(shareData.url).then(() => alert('Link copied!'));
+                    }
+                };
+
+                // Call countTopicView – the RPC will handle self‑view protection
+                await countTopicView(topicId);
+
+                setTimeout(() => {
+                    readingProgress.classList.add('visible');
+                    updateReadingProgress();
+                }, 100);
+                window.repliesSubscription = supabaseClient
+                    .channel(`public:replies:topic_id=eq.${topicId}`)
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'replies',
+                        filter: `topic_id=eq.${topicId}` }, () => {
+                        showTopicDetail(topicId);
+                    })
+                    .subscribe();
+            } catch (err) {
+                console.error('Error loading topic detail:', err);
+                alert('Failed to load topic details.');
+            }
+        }
+
+        backToForumBtn.addEventListener('click', () => {
+            singleTopicView.classList.add('hidden');
+            forumList.style.display = 'block';
+            carouselContainer.classList.remove('hidden');
+            readingProgress.classList.remove('visible');
+            if (window.repliesSubscription) window.repliesSubscription.unsubscribe();
+            if (allTopics.length) {
+                renderTopicList(allTopics, false);
+            }
+            updateStickyVisibility();
+        });
+
+        replyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = replyContent.value.trim();
+            if (!content || !currentTopicId) return;
+            if (!currentUser) {
+                alert('You must be logged in to reply.');
+                openModal();
+                return;
+            }
+            try {
+                const { error } = await supabaseClient
+                    .from('replies')
+                    .insert({ topic_id: currentTopicId, content, user_id: currentUser.id });
+                if (error) throw error;
+                replyContent.value = '';
+                localStorage.removeItem(REPLY_DRAFT_KEY);
+                showTopicDetail(currentTopicId);
+                setTimeout(() => {
+                    document.getElementById('repliesList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } catch (err) {
+                console.error('Error posting reply:', err);
+                alert('Failed to post reply: ' + err.message);
+            }
+        });
+
+        // ── Profile ──
+        async function showProfile(userId) {
+            try {
+                const { data: user, error } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+                if (error) throw error;
+                const { data: topics, error: tErr } = await supabaseClient
+                    .from('topics')
+                    .select('id, title, created_at, views, reply_count:replies(count)')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false });
+                if (tErr) throw tErr;
+                const { data: replies, error: rErr } = await supabaseClient
+                    .from('replies')
+                    .select('id, content, created_at, topic_id, topics(title)')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                if (rErr) throw rErr;
+                let html = `
+                            <div class="profile-card">
+                                <div class="avatar">${user.username?.charAt(0).toUpperCase() || '?'}</div>
+                                <h2>${user.username || 'Anonymous'}</h2>
+                                <p style="color:var(--text-secondary);">${user.email || ''}</p>
+                                <p style="color:var(--text-muted); margin-top:8px;">Joined ${new Date(user.created_at).toLocaleDateString()}</p>
+                            </div>
+                            <h3 style="margin-bottom:12px;">Topics (${topics.length})</h3>
+                        `;
+                if (topics.length) {
+                    topics.forEach(t => {
+                        const count = t.reply_count?.[0]?.count || 0;
+                        html += `
+                                    <div class="topic-card" style="cursor:pointer;" data-topic-id="${t.id}">
+                                        <div class="flex-row">
+                                            <div>
+                                                <div class="title">${t.title}</div>
+                                                <div class="meta">${new Date(t.created_at).toLocaleDateString()} · ${t.views || 0} views</div>
+                                            </div>
+                                            <span class="reply-count"><i class="fas fa-reply"></i> ${count}</span>
+                                        </div>
+                                    </div>
+                                `;
+                    });
+                } else {
+                    html += `<p class="text-gray-400">No topics yet.</p>`;
+                }
+                html += `<h3 style="margin:20px 0 12px;">Recent Replies</h3>`;
+                if (replies.length) {
+                    replies.forEach(r => {
+                        html += `
+                                    <div class="reply-item">
+                                        <div class="reply-meta">
+                                            <span>Replied to <a href="#" class="text-purple-600 topic-link" data-topic-id="${r.topic_id}">${r.topics?.title || 'a topic'}</a></span>
+                                            <span>${new Date(r.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                        <div class="reply-body">${r.content}</div>
+                                    </div>
+                                `;
+                    });
+                } else {
+                    html += `<p class="text-gray-400">No replies yet.</p>`;
+                }
+                profileContent.innerHTML = html;
+                forumList.style.display = 'none';
+                singleTopicView.classList.add('hidden');
+                profileView.classList.remove('hidden');
+                carouselContainer.classList.add('hidden');
+                stickyNewTopic.classList.remove('visible');
+                readingProgress.classList.remove('visible');
+                document.querySelectorAll('#profileContent .topic-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const id = card.dataset.topicId;
+                        showTopicDetail(id);
+                    });
+                });
+                document.querySelectorAll('#profileContent .topic-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const id = link.dataset.topicId;
+                        showTopicDetail(id);
+                    });
+                });
+            } catch (err) {
+                console.error('Profile load error:', err);
+                alert('Could not load profile.');
+            }
+        }
+
+        backFromProfileBtn.addEventListener('click', () => {
+            profileView.classList.add('hidden');
+            forumList.style.display = 'block';
+            carouselContainer.classList.remove('hidden');
+            if (allTopics.length) {
+                renderTopicList(allTopics, false);
+            }
+            updateStickyVisibility();
+        });
+
+        // ── Sort, load more, scroll, keyboard ──
+        sortSelect.addEventListener('change', () => {
+            currentSort = sortSelect.value;
+            localStorage.setItem('forum_sort', currentSort);
+            if (allTopics.length) {
+                if (searchQuery) {
+                    filterTopics(searchQuery);
+                } else {
+                    renderTopicList(allTopics, false);
+                }
+            }
+        });
+
+        loadMoreBtn.addEventListener('click', () => {
+            if (!isLoading && hasMore) {
+                currentPage++;
+                loadTopics(currentPage, true);
+            }
+        });
+
+        function updateStickyVisibility() {
+            const isDetail = !singleTopicView.classList.contains('hidden');
+            const isProfile = !profileView.classList.contains('hidden');
+            if (isDetail || isProfile) {
+                stickyNewTopic.classList.remove('visible');
+                return;
+            }
+            if (window.scrollY > 300) {
+                stickyNewTopic.classList.add('visible');
+            } else {
+                stickyNewTopic.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+            updateStickyVisibility();
+            updateReadingProgress();
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key === 'n' || e.key === 'N') {
+                e.preventDefault();
+                if (!currentUser) {
+                    openModal();
+                    return;
+                }
+                newTopicBtn.click();
+            }
+            if ((e.key === 'r' || e.key === 'R') && !singleTopicView.classList.contains('hidden')) {
+                e.preventDefault();
+                replyContent.focus();
+            }
+            if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                keyboardHelp.classList.toggle('visible');
+                setTimeout(() => keyboardHelp.classList.remove('visible'), 3000);
+            }
+        });
+
+        // ── Realtime ──
+        if (window.topicsSubscription) window.topicsSubscription.unsubscribe();
+        window.topicsSubscription = supabaseClient
+            .channel('public:topics')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'topics' }, () => {
+                sessionStorage.removeItem(CACHE_KEY);
+                resetAndLoad();
+            })
+            .subscribe();
+
+        // ── Init ──
+        const savedSort = localStorage.getItem('forum_sort') || 'hot';
+        sortSelect.value = savedSort;
+        currentSort = savedSort;
+
+        refreshForumViewCount();
+        loadDrafts();
+        updateCharCounter(topicContent, topicCharCounter, 10000);
+        updateCharCounter(replyContent, replyCharCounter, 5000);
+
+        setTimeout(() => {
+            keyboardHelp.classList.add('visible');
+            setTimeout(() => keyboardHelp.classList.remove('visible'), 3000);
+        }, 2000);
+
+        console.log('💬 FEDPromptly – hearts removed successfully.');
+    </script>
+
+    <!-- ── Nav toggle (responsive) ── -->
+    <script>
+        // Mobile nav toggle (outside the main script)
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('is-open');
+            this.querySelector('i').className = navLinks.classList.contains('is-open') ? 'fas fa-times' : 'fas fa-bars';
+        });
+        // Close nav when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('is-open');
+                navToggle.querySelector('i').className = 'fas fa-bars';
+            });
+        });
+    </script>
+
+</body>
+</html>
