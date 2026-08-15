@@ -347,7 +347,7 @@
             border: 1px solid #3b82f6;
         }
 
-        /* ── Unified Nav (from index.html) ── */
+        /* ── UNIFIED NAV (same as index.html + Home tab) ── */
         nav {
             position: fixed;
             top: 0;
@@ -434,7 +434,7 @@
             cursor: pointer;
         }
 
-        /* ── Forum‑specific styles (unchanged) ── */
+        /* ── Forum-specific styles (unchanged) ── */
         .forum-stats {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -1356,7 +1356,7 @@
         <div class="progress-fill" id="progressFill"></div>
     </div>
 
-    <!-- ── UNIFIED NAVIGATION (same as index.html) ── -->
+    <!-- ── UNIFIED NAVIGATION (with Home tab) ── -->
     <nav>
         <div class="container">
             <a href="index.html" class="logo">
@@ -1364,6 +1364,7 @@
                 <span class="badge">BETA</span>
             </a>
             <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
                 <li><a href="forum.html" class="active">Forum</a></li>
                 <li><a href="projects.html">Projects</a></li>
                 <li><a href="isp.html">ISP</a></li>
@@ -1374,7 +1375,7 @@
                         <i class="fab fa-github"></i> GitHub
                     </a>
                 </li>
-                <!-- Extra: theme toggle + login (moved from forum header) -->
+                <!-- Extra: theme toggle + login -->
                 <li style="display:flex; align-items:center; gap:8px;">
                     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                         <i class="fas fa-moon" id="themeIcon"></i>
@@ -2960,14 +2961,12 @@
 
     <!-- ── Nav toggle (responsive) ── -->
     <script>
-        // Mobile nav toggle (outside the main script)
         const navToggle = document.getElementById('navToggle');
         const navLinks = document.getElementById('navLinks');
         navToggle.addEventListener('click', function() {
             navLinks.classList.toggle('is-open');
             this.querySelector('i').className = navLinks.classList.contains('is-open') ? 'fas fa-times' : 'fas fa-bars';
         });
-        // Close nav when a link is clicked
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', function() {
                 navLinks.classList.remove('is-open');
