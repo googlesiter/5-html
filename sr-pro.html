@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silence Remover Pro — No Cut Guaranteed</title>
+    <style>
+        /* ── Reset & Base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #08080c;
+            --surface: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.07);
+            --glass: rgba(255, 255, 255, 0.03);
+            --text: #f0f0f5;
+            --text-muted: #9999aa;
+            --accent: #6c8cff;
+            --accent-glow: rgba(108, 140, 255, 0.25);
+            --green: #2ecc71;
+            --green-dim: rgba(46, 204, 113, 0.15);
+            --red: #ff6b6b;
+            --red-dim: rgba(255, 107, 107, 0.12);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.8);
+            --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(108, 140, 255, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(46, 204, 113, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255, 107, 107, 0.03) 0%, transparent 40%);
+            padding-top: 80px;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ── Glass Card ── */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(18px) saturate(1.4);
+            -webkit-backdrop-filter: blur(18px) saturate(1.4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 36px 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.3;
+        }
+
+        /* ── Tabs Navigation ── */
+        .tabs-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(8, 8, 12, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px 24px;
+        }
+        .tabs-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 4px 0;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        .tabs-nav a:hover {
+            color: #fff;
+            border-bottom-color: rgba(255, 255, 255, 0.15);
+        }
+        .tabs-nav a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .tabs-nav .github-link {
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+        .tabs-nav .github-link:hover {
+            color: #fff;
+            border-bottom-color: transparent;
+        }
+        .tabs-nav .spacer {
+            flex: 1;
+            max-width: 40px;
+        }
+        @media (max-width: 600px) {
+            .tabs-nav {
+                gap: 6px 12px;
+                padding: 10px 16px;
+            }
+            .tabs-nav a {
+                font-size: 0.75rem;
+            }
+            body {
+                padding-top: 68px;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            .card {
+                padding: 20px 16px 28px;
+            }
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .header-left h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 40%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-left h1 span {
+            font-size: 1.4rem;
+            -webkit-text-fill-color: initial;
+            color: var(--text);
+        }
+        .header-left p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-top: 2px;
+            letter-spacing: 0.01em;
+        }
+        .badge-pro {
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px var(--accent-glow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            -webkit-text-fill-color: #fff;
+            white-space: nowrap;
+        }
+
+        /* ── Dropzone ── */
+        .dropzone {
+            border: 2px dashed rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            margin: 22px 0 16px;
+            transition: var(--transition);
+            position: relative;
+            background: rgba(255, 255, 255, 0.015);
+        }
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: var(--accent);
+            background: rgba(108, 140, 255, 0.05);
+            transform: scale(1.003);
+        }
+        .dropzone .icon {
+            font-size: 3.4rem;
+            display: block;
+            margin-bottom: 8px;
+            filter: grayscale(0.2);
+            transition: var(--transition);
+        }
+        .dropzone:hover .icon {
+            filter: grayscale(0);
+            transform: scale(1.05);
+        }
+        .dropzone .title {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        .dropzone .sub {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+        .dropzone .formats {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .dropzone .formats span {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* ── File Info ── */
+        .file-info {
+            display: none;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            margin: 12px 0 18px;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeSlide 0.4s ease;
+        }
+        .file-info.visible {
+            display: flex;
+        }
+        .file-info .thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+        .file-info .details {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            font-size: 0.85rem;
+        }
+        .file-info .details .name {
+            font-weight: 600;
+            color: #fff;
+        }
+        .file-info .details .meta {
+            color: var(--text-muted);
+        }
+        .file-info .badge-ready {
+            background: var(--green-dim);
+            color: var(--green);
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid rgba(46, 204, 113, 0.15);
+        }
+
+        /* ── Settings ── */
+        .settings-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 20px 22px;
+            border-radius: var(--radius-sm);
+            margin: 14px 0 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        @media (max-width: 700px) {
+            .settings-panel {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        .setting-row label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+        }
+        .setting-row label .val {
+            color: #fff;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0 10px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            min-width: 32px;
+            text-align: center;
+        }
+        .setting-row input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            transition: var(--transition);
+        }
+        .setting-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .setting-row input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .setting-row .hint {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+
+        /* ── Buttons ── */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 6px 0 10px;
+        }
+        button {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        button:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 24px var(--accent-glow);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #7a98ff;
+            border-color: #7a98ff;
+            box-shadow: 0 6px 32px var(--accent-glow);
+        }
+        .btn-success {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(46, 204, 113, 0.25);
+        }
+        .btn-success:hover:not(:disabled) {
+            background: #3ddc84;
+            border-color: #3ddc84;
+            box-shadow: 0 6px 32px rgba(46, 204, 113, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .btn-outline:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Progress ── */
+        .progress-wrap {
+            display: none;
+            margin: 16px 0 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
+            height: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-wrap.visible {
+            display: block;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #a78bfa);
+            border-radius: 40px;
+            transition: width 0.2s ease;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── Stats ── */
+        .stats {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            animation: fadeSlide 0.4s ease;
+        }
+        .stats.visible {
+            display: block;
+        }
+        .stats .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px 20px;
+        }
+        .stats .stat-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .stats .stat-item .label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+        .stats .stat-item .value {
+            font-weight: 600;
+            color: #fff;
+        }
+        .stats .stat-item .value.accent {
+            color: var(--accent);
+        }
+        .stats .stat-item .value.green {
+            color: var(--green);
+        }
+        .stats .stat-item .value.red {
+            color: var(--red);
+        }
+
+        /* ── Waveform Timeline ── */
+        .waveform-container {
+            display: none;
+            margin: 16px 0 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            animation: fadeSlide 0.5s ease;
+        }
+        .waveform-container.visible {
+            display: block;
+        }
+        .waveform-container .wave-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .waveform-canvas-wrap {
+            position: relative;
+            width: 100%;
+            height: 52px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .waveform-canvas-wrap canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .waveform-canvas-wrap .region-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .waveform-canvas-wrap .region-overlay .region-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: var(--green);
+            opacity: 0.18;
+            border-radius: 2px;
+            transition: opacity 0.2s;
+        }
+        .waveform-canvas-wrap .region-overlay .region-bar.silence {
+            background: var(--red);
+            opacity: 0.13;
+        }
+        .waveform-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+        .waveform-legend .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 4px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        .waveform-legend .dot.green {
+            background: var(--green);
+            opacity: 0.5;
+        }
+        .waveform-legend .dot.red {
+            background: var(--red);
+            opacity: 0.4;
+        }
+
+        /* ── Output ── */
+        .output {
+            margin-top: 16px;
+        }
+        .output video {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .output .download-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 14px;
+            align-items: center;
+        }
+        .output .download-link {
+            background: var(--green);
+            color: #fff;
+            padding: 10px 28px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .output .download-link:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 24px rgba(46, 204, 113, 0.3);
+        }
+        .output .output-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ── Toast ── */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(20, 20, 30, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            color: #fff;
+            font-size: 0.85rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            animation: toastIn 0.4s ease;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+        .toast.out {
+            animation: toastOut 0.3s ease forwards;
+        }
+        .toast .toast-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .toast .toast-msg {
+            flex: 1;
+            line-height: 1.4;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 4px;
+            transition: var(--transition);
+        }
+        .toast .toast-close:hover {
+            color: #fff;
+        }
+        .toast.info {
+            border-left: 3px solid var(--accent);
+        }
+        .toast.success {
+            border-left: 3px solid var(--green);
+        }
+        .toast.error {
+            border-left: 3px solid var(--red);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(30px) scale(0.95);
+            }
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px 16px 28px;
+            }
+            .header-left h1 {
+                font-size: 1.4rem;
+            }
+            .dropzone {
+                padding: 32px 16px;
+            }
+            .dropzone .icon {
+                font-size: 2.6rem;
+            }
+            .settings-panel {
+                padding: 14px 16px;
+            }
+            .stats .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .file-info .details {
+                font-size: 0.75rem;
+                gap: 4px 12px;
+            }
+            .toast-container {
+                top: 72px;
+                right: 12px;
+                max-width: calc(100% - 24px);
+            }
+        }
+
+        /* ── Utilities ── */
+        .hidden {
+            display: none !important;
+        }
+        .mt-1 {
+            margin-top: 8px;
+        }
+        .gap-1 {
+            gap: 8px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+
+        /* ── Keyboard hint ── */
+        .kbd-hint {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+            letter-spacing: 0.3px;
+            margin-left: 6px;
+        }
+        .kbd-hint kbd {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0 6px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── TABS NAV ─── -->
+    <nav class="tabs-nav">
+        <a href="index.html">Home</a>
+        <a href="forum.html">Forum</a>
+        <a href="projects.html">Projects</a>
+        <a href="isp.html">ISP</a>
+        <a href="sr-pro.html" class="active">SR-Pro</a>
+        <a href="poster.html">Poster</a>
+        <span class="spacer"></span>
+        <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" class="github-link">
+            <i class="fab fa-github" style="font-style:normal;font-weight:400;">GitHub</i>
+        </a>
+    </nav>
+
+    <!-- ─── Toast Container ─── -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="container">
+        <div class="card">
+
+            <!-- ─── Header ─── -->
+            <div class="header">
+                <div class="header-left">
+                    <h1>
+                        <span>🔇</span> Silence Remover
+                        <span class="badge-pro">Pro</span>
+                    </h1>
+                    <p>Smart silence removal · Keeps every word with safety padding</p>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.4;white-space:nowrap;padding-top:4px;">
+                    ⚡ v2.0
+                </div>
+            </div>
+
+            <!-- ─── Dropzone ─── -->
+            <div class="dropzone" id="dropzone">
+                <span class="icon">🎬</span>
+                <div class="title">Drop your video here</div>
+                <div class="sub">or click to browse</div>
+                <div class="formats">
+                    <span>MP4</span>
+                    <span>MOV</span>
+                    <span>WebM</span>
+                    <span>AVI</span>
+                </div>
+            </div>
+            <input type="file" id="fileInput" accept="video/*" style="display:none;" />
+
+            <!-- ─── File Info ─── -->
+            <div class="file-info" id="fileInfo">
+                <div class="thumb">🎞️</div>
+                <div class="details">
+                    <span class="name" id="fileName">video.mp4</span>
+                    <span class="meta" id="fileSize">— MB</span>
+                    <span class="meta">⏱️ <span id="duration">—</span></span>
+                    <span class="badge-ready">✓ Ready</span>
+                </div>
+            </div>
+
+            <!-- ─── Settings ─── -->
+            <div class="settings-panel">
+                <div class="setting-row">
+                    <label>
+                        <span>🎚️ Sensitivity</span>
+                        <span class="val" id="sensitivityLabel">very low</span>
+                    </label>
+                    <input type="range" id="sensitivity" min="0" max="100" value="20" />
+                    <div class="hint">Lower = only pure silence</div>
+                </div>
+                <div class="setting-row">
+                    <label>
+                        <span>⏱️ Min silence</span>
+                        <span class="val" id="minSilenceVal">1.0s</span>
+                    </label>
+                    <input type="range" id="minSilence" min="0.5" max="3.0" step="0.1" value="1.0" />
+                    <div class="hint">Pauses longer than this are removed</div>
+                </div>
+                <div class="setting-row">
+                    <label>
+                        <span>🛡️ Safety padding</span>
+                        <span class="val" id="paddingVal">0.3s</span>
+                    </label>
+                    <input type="range" id="padding" min="0.1" max="0.8" step="0.05" value="0.3" />
+                    <div class="hint">Extra audio before/after speech</div>
+                </div>
+            </div>
+
+            <!-- ─── Actions ─── -->
+            <div class="actions">
+                <button id="analyzeBtn" disabled class="btn-primary">
+                    🔍 Detect Silence
+                    <span class="kbd-hint"><kbd>⌘D</kbd></span>
+                </button>
+                <button id="processBtn" disabled class="btn-success">
+                    ✂️ Export Cleaned
+                    <span class="kbd-hint"><kbd>⌘E</kbd></span>
+                </button>
+                <button id="resetBtn" class="btn-outline" style="margin-left:auto;">
+                    ↻ Reset
+                </button>
+            </div>
+
+            <!-- ─── Progress ─── -->
+            <div class="progress-wrap" id="progress">
+                <div class="progress-fill" id="fill"></div>
+            </div>
+            <div class="progress-label" id="progressLabel" style="display:none;">
+                <span id="progressText">Processing…</span>
+                <span id="progressPct">0%</span>
+            </div>
+
+            <!-- ─── Stats ─── -->
+            <div class="stats" id="stats"></div>
+
+            <!-- ─── Waveform ─── -->
+            <div class="waveform-container" id="waveformContainer">
+                <div class="wave-label">
+                    <span>🔊 Audio waveform</span>
+                    <span id="waveDuration">0:00</span>
+                </div>
+                <div class="waveform-canvas-wrap" id="waveWrap">
+                    <canvas id="waveCanvas"></canvas>
+                    <div class="region-overlay" id="regionOverlay"></div>
+                </div>
+                <div class="waveform-legend">
+                    <span><span class="dot green"></span> Kept (speech)</span>
+                    <span><span class="dot red"></span> Removed (silence)</span>
+                    <span style="opacity:0.4;">·</span>
+                    <span style="opacity:0.6;font-size:0.6rem;">🛡️ padding applied</span>
+                </div>
+            </div>
+
+            <!-- ─── Output ─── -->
+            <div class="output" id="output"></div>
+
+            <!-- ─── Note ─── -->
+            <div style="margin-top:22px;padding:12px 16px;background:rgba(108,140,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(108,140,255,0.08);font-size:0.78rem;color:var(--text-muted);line-height:1.5;">
+                💡 <strong style="color:var(--text);">Why words stay intact:</strong> We add a safety padding (default 0.3s) around every speech segment and <strong style="color:var(--text);">always keep</strong> the first &amp; last 0.5s. If you still hear cuts, increase the padding to 0.5–0.6s.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  STATE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        let videoFile = null;
+        let videoDuration = 0;
+        let keepRegions = [];
+        let silenceRegions = [];
+        let isProcessing = false;
+        let audioData = null; // for waveform
+
+        // DOM refs
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        const dropzone = $('#dropzone');
+        const fileInput = $('#fileInput');
+        const fileInfo = $('#fileInfo');
+        const fileName = $('#fileName');
+        const fileSize = $('#fileSize');
+        const durationEl = $('#duration');
+        const analyzeBtn = $('#analyzeBtn');
+        const processBtn = $('#processBtn');
+        const resetBtn = $('#resetBtn');
+        const progress = $('#progress');
+        const fill = $('#fill');
+        const progressLabel = $('#progressLabel');
+        const progressText = $('#progressText');
+        const progressPct = $('#progressPct');
+        const statsDiv = $('#stats');
+        const outputDiv = $('#output');
+        const waveContainer = $('#waveformContainer');
+        const waveCanvas = $('#waveCanvas');
+        const regionOverlay = $('#regionOverlay');
+        const waveDuration = $('#waveDuration');
+
+        const sensitivitySlider = $('#sensitivity');
+        const sensitivityLabel = $('#sensitivityLabel');
+        const minSilenceSlider = $('#minSilence');
+        const minSilenceVal = $('#minSilenceVal');
+        const paddingSlider = $('#padding');
+        const paddingVal = $('#paddingVal');
+
+        const toastContainer = $('#toastContainer');
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  TOAST
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function toast(msg, type = 'info', duration = 4500) {
+            const icons = { info: 'ℹ️', success: '✅', error: '❌' };
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+            <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+            <span class="toast-msg">${msg}</span>
+            <button class="toast-close" aria-label="Close">✕</button>
+          `;
+            toastContainer.appendChild(el);
+            const close = () => {
+                el.classList.add('out');
+                setTimeout(() => el.remove(), 350);
+            };
+            el.querySelector('.toast-close').addEventListener('click', close);
+            const timer = setTimeout(close, duration);
+            el.addEventListener('mouseenter', () => clearTimeout(timer));
+            return el;
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  HELPERS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function formatTime(sec) {
+            if (!sec || sec < 0) return '0:00';
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+            return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  UI UPDATES
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        sensitivitySlider.oninput = () => {
+            const v = parseInt(sensitivitySlider.value);
+            sensitivityLabel.textContent = v < 30 ? 'very low' : v < 60 ? 'medium' : 'high';
+        };
+        minSilenceSlider.oninput = () => { minSilenceVal.textContent = minSilenceSlider.value + 's'; };
+        paddingSlider.oninput = () => { paddingVal.textContent = paddingSlider.value + 's'; };
+
+        function setButtonsEnabled(analyze, process) {
+            analyzeBtn.disabled = !analyze;
+            processBtn.disabled = !process;
+        }
+
+        function setProgress(pct, text) {
+            if (pct === undefined) {
+                progress.classList.remove('visible');
+                progressLabel.style.display = 'none';
+                return;
+            }
+            progress.classList.add('visible');
+            progressLabel.style.display = 'flex';
+            fill.style.width = clamp(pct, 0, 100) + '%';
+            progressPct.textContent = Math.round(clamp(pct, 0, 100)) + '%';
+            if (text) progressText.textContent = text;
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  FILE HANDLING
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+            videoFile = file;
+            keepRegions = [];
+            silenceRegions = [];
+            audioData = null;
+            outputDiv.innerHTML = '';
+            statsDiv.classList.remove('visible');
+            waveContainer.classList.remove('visible');
+            setButtonsEnabled(false, false);
+
+            // Show file info
+            fileName.textContent = file.name;
+            fileSize.textContent = formatSize(file.size);
+            fileInfo.classList.add('visible');
+
+            // Load metadata
+            try {
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                const url = URL.createObjectURL(file);
+                video.src = url;
+                await new Promise((resolve, reject) => {
+                    video.onloadedmetadata = resolve;
+                    video.onerror = reject;
+                });
+                videoDuration = video.duration;
+                durationEl.textContent = formatTime(videoDuration);
+                URL.revokeObjectURL(url);
+                setButtonsEnabled(true, false);
+                toast(`✅ "${file.name}" loaded — ready to analyze`, 'success');
+            } catch (err) {
+                toast('⚠️ Could not read video metadata', 'error');
+                console.warn(err);
+            }
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  RESET
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        resetBtn.addEventListener('click', () => {
+            videoFile = null;
+            keepRegions = [];
+            silenceRegions = [];
+            audioData = null;
+            fileInput.value = '';
+            fileInfo.classList.remove('visible');
+            statsDiv.classList.remove('visible');
+            waveContainer.classList.remove('visible');
+            outputDiv.innerHTML = '';
+            setProgress();
+            setButtonsEnabled(false, false);
+            toast('↻ Reset complete', 'info');
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  ANALYZE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function analyzeSilence() {
+            if (!videoFile) return;
+            if (isProcessing) return;
+
+            setButtonsEnabled(false, false);
+            outputDiv.innerHTML = '';
+            statsDiv.classList.remove('visible');
+            waveContainer.classList.remove('visible');
+            setProgress(0, 'Loading audio…');
+            toast('🔍 Analyzing audio…', 'info');
+
+            try {
+                const arrayBuffer = await videoFile.arrayBuffer();
+                const audioCtx = new AudioContext();
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
+                const duration = audioBuffer.duration;
+                const channelData = audioBuffer.getChannelData(0);
+                const sampleRate = audioBuffer.sampleRate;
+
+                // Store for waveform
+                audioData = { channelData, sampleRate, duration };
+
+                const sensitivity = parseInt(sensitivitySlider.value);
+                const thresholdAmp = 0.015 - (sensitivity / 100) * 0.013;
+                const minSilenceSec = parseFloat(minSilenceSlider.value);
+                const safetyPadding = parseFloat(paddingSlider.value);
+
+                // ── Detect silence ──
+                let silences = [];
+                let inSilence = false;
+                let silenceStart = 0;
+                const winSize = Math.floor(sampleRate * 0.05);
+                const totalSamples = channelData.length;
+                let lastPct = 0;
+
+                for (let i = 0; i < totalSamples; i += winSize) {
+                    let sumSq = 0,
+                        count = 0;
+                    for (let j = 0; j < winSize && i + j < totalSamples; j++) {
+                        sumSq += channelData[i + j] ** 2;
+                        count++;
+                    }
+                    const rms = Math.sqrt(sumSq / count);
+                    const isSilent = rms < thresholdAmp;
+                    const time = i / sampleRate;
+
+                    if (isSilent && !inSilence) {
+                        silenceStart = time;
+                        inSilence = true;
+                    } else if (!isSilent && inSilence) {
+                        const len = time - silenceStart;
+                        if (len >= minSilenceSec) silences.push({ start: silenceStart, end: time });
+                        inSilence = false;
+                    }
+
+                    const pct = (i / totalSamples) * 30;
+                    if (pct - lastPct > 2) {
+                        setProgress(pct, 'Detecting silence…');
+                        lastPct = pct;
+                        await sleep(2);
+                    }
+                }
+                if (inSilence) {
+                    const len = duration - silenceStart;
+                    if (len >= minSilenceSec) silences.push({ start: silenceStart, end: duration });
+                }
+
+                // Merge adjacent silences
+                for (let i = 0; i < silences.length - 1; i++) {
+                    if (silences[i + 1].start - silences[i].end < 0.2) {
+                        silences[i].end = silences[i + 1].end;
+                        silences.splice(i + 1, 1);
+                        i--;
+                    }
+                }
+                silenceRegions = silences;
+
+                // ── Build keep regions ──
+                let tempKeep = [];
+                let lastEnd = 0;
+                for (const s of silences) {
+                    if (s.start > lastEnd) {
+                        tempKeep.push({
+                            start: Math.max(0, lastEnd - safetyPadding),
+                            end: Math.min(duration, s.start + safetyPadding)
+                        });
+                    }
+                    lastEnd = s.end;
+                }
+                if (lastEnd < duration) {
+                    tempKeep.push({
+                        start: Math.max(0, lastEnd - safetyPadding),
+                        end: duration
+                    });
+                }
+
+                // Always keep first & last 0.5s
+                if (!tempKeep.length || tempKeep[0].start > 0.5) {
+                    tempKeep.unshift({ start: 0, end: Math.min(0.5, duration) });
+                }
+                if (!tempKeep.length || tempKeep[tempKeep.length - 1].end < duration - 0.5) {
+                    tempKeep.push({ start: Math.max(0, duration - 0.5), end: duration });
+                }
+
+                tempKeep.sort((a, b) => a.start - b.start);
+                keepRegions = [];
+                for (const r of tempKeep) {
+                    if (!keepRegions.length || r.start > keepRegions[keepRegions.length - 1].end + 0.01) {
+                        keepRegions.push(r);
+                    } else {
+                        keepRegions[keepRegions.length - 1].end = Math.max(keepRegions[keepRegions.length - 1].end, r.end);
+                    }
+                }
+
+                // ── Stats ──
+                const totalKeep = keepRegions.reduce((sum, r) => sum + (r.end - r.start), 0);
+                const removedTime = duration - totalKeep;
+
+                statsDiv.innerHTML = `
+                <div class="stat-grid">
+                  <div class="stat-item"><span class="label">📊 Original</span><span class="value">${formatTime(duration)}</span></div>
+                  <div class="stat-item"><span class="label">🔇 Removed silence</span><span class="value red">${formatTime(removedTime)} (${Math.round((removedTime/duration)*100)}%)</span></div>
+                  <div class="stat-item"><span class="label">✅ Kept speech</span><span class="value green">${formatTime(totalKeep)} (${Math.round((totalKeep/duration)*100)}%)</span></div>
+                  <div class="stat-item"><span class="label">📍 Silent gaps</span><span class="value accent">${silences.length}</span></div>
+                  <div class="stat-item"><span class="label">🛡️ Padding</span><span class="value">${safetyPadding}s</span></div>
+                  <div class="stat-item"><span class="label">🎯 Speech segments</span><span class="value accent">${keepRegions.length}</span></div>
+                </div>
+                <div style="margin-top:8px;font-size:0.7rem;color:var(--text-muted);opacity:0.6;">
+                  First &amp; last 0.5s always kept · ${keepRegions.length} speech segments
+                </div>
+              `;
+                statsDiv.classList.add('visible');
+
+                // ── Waveform ──
+                renderWaveform(duration, silences, keepRegions);
+
+                setProgress(100, 'Done ✓');
+                await sleep(300);
+                setProgress();
+
+                if (keepRegions.length === 0) {
+                    toast('⚠️ No speech detected — try lowering sensitivity', 'error');
+                    setButtonsEnabled(true, false);
+                    return;
+                }
+
+                setButtonsEnabled(true, true);
+                toast(`✅ Analysis complete — ${keepRegions.length} speech segments kept`, 'success');
+                audioCtx.close();
+
+            } catch (err) {
+                console.error(err);
+                toast('❌ Analysis failed: ' + err.message, 'error');
+                setButtonsEnabled(true, false);
+                setProgress();
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  WAVEFORM RENDER
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function renderWaveform(duration, silences, keeps) {
+            if (!audioData) {
+                waveContainer.classList.remove('visible');
+                return;
+            }
+            const canvas = waveCanvas;
+            const wrap = document.getElementById('waveWrap');
+            const rect = wrap.getBoundingClientRect();
+            const W = wrap.clientWidth || 600;
+            const H = wrap.clientHeight || 52;
+            canvas.width = W * devicePixelRatio;
+            canvas.height = H * devicePixelRatio;
+            canvas.style.width = W + 'px';
+            canvas.style.height = H + 'px';
+            const ctx = canvas.getContext('2d');
+            ctx.scale(devicePixelRatio, devicePixelRatio);
+
+            const data = audioData.channelData;
+            const sr = audioData.sampleRate;
+            const totalSamples = data.length;
+            const pixelsPerSec = W / duration;
+            const samplesPerPixel = Math.floor(totalSamples / W);
+
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = 'rgba(255,255,255,0.02)';
+            ctx.fillRect(0, 0, W, H);
+
+            // Draw waveform
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(108,140,255,0.35)';
+            ctx.lineWidth = 1.2;
+            let x = 0;
+            const halfH = H / 2;
+            for (let i = 0; i < W; i++) {
+                const startIdx = Math.floor(i * samplesPerPixel);
+                const endIdx = Math.min(startIdx + samplesPerPixel, totalSamples);
+                let sum = 0,
+                    count = 0;
+                for (let j = startIdx; j < endIdx; j++) {
+                    sum += Math.abs(data[j]);
+                    count++;
+                }
+                const avg = count ? sum / count : 0;
+                const y = halfH - avg * halfH * 2.2;
+                if (i === 0) ctx.moveTo(i, y);
+                else ctx.lineTo(i, y);
+                x = i;
+            }
+            ctx.stroke();
+
+            // Mirror
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(108,140,255,0.15)';
+            ctx.lineWidth = 0.6;
+            for (let i = 0; i < W; i++) {
+                const startIdx = Math.floor(i * samplesPerPixel);
+                const endIdx = Math.min(startIdx + samplesPerPixel, totalSamples);
+                let sum = 0,
+                    count = 0;
+                for (let j = startIdx; j < endIdx; j++) {
+                    sum += Math.abs(data[j]);
+                    count++;
+                }
+                const avg = count ? sum / count : 0;
+                const y = halfH + avg * halfH * 2.2;
+                if (i === 0) ctx.moveTo(i, y);
+                else ctx.lineTo(i, y);
+            }
+            ctx.stroke();
+
+            // Draw region overlay divs
+            regionOverlay.innerHTML = '';
+            for (const s of silences) {
+                const left = (s.start / duration) * W;
+                const width = ((s.end - s.start) / duration) * W;
+                if (width > 0.5) {
+                    const bar = document.createElement('div');
+                    bar.className = 'region-bar silence';
+                    bar.style.left = left + 'px';
+                    bar.style.width = width + 'px';
+                    regionOverlay.appendChild(bar);
+                }
+            }
+            for (const k of keeps) {
+                const left = (k.start / duration) * W;
+                const width = ((k.end - k.start) / duration) * W;
+                if (width > 0.5) {
+                    const bar = document.createElement('div');
+                    bar.className = 'region-bar';
+                    bar.style.left = left + 'px';
+                    bar.style.width = width + 'px';
+                    regionOverlay.appendChild(bar);
+                }
+            }
+
+            waveDuration.textContent = formatTime(duration);
+            waveContainer.classList.add('visible');
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  EXPORT
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function exportVideo() {
+            if (!videoFile || !keepRegions.length) {
+                toast('⚠️ Analyze first to detect speech', 'error');
+                return;
+            }
+            if (isProcessing) {
+                toast('⏳ Already processing…', 'info');
+                return;
+            }
+
+            isProcessing = true;
+            setButtonsEnabled(false, false);
+            outputDiv.innerHTML = '';
+            setProgress(0, 'Loading video…');
+            toast('🎬 Rendering cleaned video…', 'info');
+
+            try {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(videoFile);
+                await new Promise((res, rej) => {
+                    video.onloadedmetadata = res;
+                    video.onerror = rej;
+                });
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth || 1280;
+                canvas.height = video.videoHeight || 720;
+
+                const audioCtx = new AudioContext();
+                const source = audioCtx.createMediaElementSource(video);
+                const dest = audioCtx.createMediaStreamDestination();
+                source.connect(dest);
+                source.connect(audioCtx.destination);
+
+                const videoStream = canvas.captureStream(30);
+                const audioStream = dest.stream;
+                const combined = new MediaStream();
+                videoStream.getVideoTracks().forEach(t => combined.addTrack(t));
+                audioStream.getAudioTracks().forEach(t => combined.addTrack(t));
+
+                const recorder = new MediaRecorder(combined, {
+                    mimeType: 'video/webm;codecs=vp9,opus',
+                    videoBitsPerSecond: 4000000
+                });
+                const chunks = [];
+                recorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+
+                recorder.start();
+                await audioCtx.resume();
+
+                const totalSegments = keepRegions.length;
+                for (let i = 0; i < totalSegments; i++) {
+                    const region = keepRegions[i];
+                    video.currentTime = region.start;
+                    await new Promise(res => { video.onseeked = res; });
+                    video.play();
+
+                    await new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            if (video.currentTime >= region.end) {
+                                clearInterval(interval);
+                                video.pause();
+                                resolve();
+                            }
+                        }, 33);
+                    });
+
+                    const pct = ((i + 1) / totalSegments) * 100;
+                    setProgress(pct, `Rendering segment ${i+1}/${totalSegments}…`);
+                    await sleep(10);
+                }
+
+                recorder.stop();
+                await new Promise(res => { recorder.onstop = res; });
+
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const sizeMB = (blob.size / 1024 / 1024).toFixed(1);
+                const origName = videoFile.name.replace(/\.[^/.]+$/, '');
+
+                outputDiv.innerHTML = `
+                <video src="${url}" controls playsinline></video>
+                <div class="download-row">
+                  <a href="${url}" download="${origName}_cleaned.webm" class="download-link">⬇️ Download Cleaned (${sizeMB} MB)</a>
+                  <span style="font-size:0.75rem;color:var(--text-muted);">
+                    ⏱️ ${formatTime(keepRegions.reduce((s,r) => s + (r.end-r.start),0))}
+                  </span>
+                </div>
+                <div class="output-meta">✅ Silence removed · Safety padding applied · No word cutting</div>
+              `;
+
+                setProgress();
+                toast('🎉 Export complete!', 'success');
+                setButtonsEnabled(true, true);
+
+                audioCtx.close();
+
+            } catch (err) {
+                console.error(err);
+                toast('❌ Export failed: ' + err.message, 'error');
+                setProgress();
+                setButtonsEnabled(true, true);
+            }
+
+            isProcessing = false;
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  KEYBOARD SHORTCUTS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        document.addEventListener('keydown', (e) => {
+            const ctrl = e.metaKey || e.ctrlKey;
+            if (ctrl && e.key === 'd') {
+                e.preventDefault();
+                if (!analyzeBtn.disabled) analyzeBtn.click();
+            }
+            if (ctrl && e.key === 'e') {
+                e.preventDefault();
+                if (!processBtn.disabled) processBtn.click();
+            }
+            if (e.key === 'Escape') {
+                resetBtn.click();
+            }
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  BIND EVENTS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        analyzeBtn.addEventListener('click', analyzeSilence);
+        processBtn.addEventListener('click', exportVideo);
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  WAVEFORM RESIZE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (waveContainer.classList.contains('visible') && audioData) {
+                    renderWaveform(audioData.duration, silenceRegions, keepRegions);
+                }
+            }, 200);
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  INIT
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        setButtonsEnabled(false, false);
+        toast('👋 Drop a video or click to start', 'info', 3000);
+    </script>
+
+</body>
+</html>
