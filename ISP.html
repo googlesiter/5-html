@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FED-OS · ISP Plans Comparison</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+    <style>
+        /* ── Unified Nav Styles ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #07090f;
+            --bg-surface: #0e111c;
+            --bg-card: #161b2b;
+            --bg-card-hover: #1e2438;
+            --text-primary: #edf0fa;
+            --text-secondary: #8890b0;
+            --text-muted: #6b7280;
+            --accent: #7c5cfc;
+            --accent-2: #5b8def;
+            --gradient-main: linear-gradient(135deg, #7c5cfc, #5b8def, #f472b6);
+            --gradient-red: linear-gradient(135deg, #ef4444, #dc2626);
+            --radius: 20px;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: var(--gradient-main);
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(124, 92, 252, 0.35);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 14px 48px rgba(124, 92, 252, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 0.85rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* ── Navigation ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 14px 0;
+            z-index: 1000;
+            background: rgba(7, 9, 15, 0.85);
+            backdrop-filter: blur(22px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .logo i {
+            -webkit-text-fill-color: var(--accent);
+            color: var(--accent);
+        }
+        .logo .badge {
+            font-size: 0.5rem;
+            background: var(--gradient-red);
+            -webkit-text-fill-color: #fff;
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ── Responsive Nav ── */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-body);
+                padding: 20px;
+                gap: 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            }
+            .nav-links.is-open {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .logo .badge {
+                font-size: 0.4rem;
+                padding: 1px 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ── Page Content ── */
+        .page-content {
+            padding-top: 90px;
+            min-height: 100vh;
+            background: #f0f4f9;
+        }
+
+        .isp-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 28px;
+        }
+
+        /* ── Page Header ── */
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            letter-spacing: -1px;
+        }
+        .page-header h1 span {
+            background: linear-gradient(135deg, #7c5cfc, #5b8def);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .page-header p {
+            color: #666;
+            font-size: 1.05rem;
+            margin-top: 6px;
+        }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .filter-btn {
+            padding: 8px 24px;
+            border-radius: 60px;
+            border: 2px solid #ddd;
+            background: white;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .filter-btn.active {
+            background: var(--active-bg, #7c5cfc);
+            color: var(--active-text, #fff);
+            border-color: var(--active-border, #7c5cfc);
+        }
+
+        .filter-btn[data-filter="all"] {
+            --active-bg: #7c5cfc;
+            --active-border: #7c5cfc;
+            --active-text: #fff;
+        }
+        .filter-btn[data-filter="fiber"] {
+            --active-bg: #009fda;
+            --active-border: #009fda;
+            --active-text: #fff;
+            border-color: #009fda;
+            color: #009fda;
+        }
+        .filter-btn[data-filter="fiber"]:hover {
+            background: #009fda;
+            color: #fff;
+        }
+        .filter-btn[data-filter="5g"] {
+            --active-bg: #e20074;
+            --active-border: #e20074;
+            --active-text: #fff;
+            border-color: #e20074;
+            color: #e20074;
+        }
+        .filter-btn[data-filter="5g"]:hover {
+            background: #e20074;
+            color: #fff;
+        }
+        .filter-btn[data-filter="cable"] {
+            --active-bg: #ffb81c;
+            --active-border: #ffb81c;
+            --active-text: #1a1a2e;
+            border-color: #ffb81c;
+            color: #c47d00;
+        }
+        .filter-btn[data-filter="cable"]:hover {
+            background: #ffb81c;
+            color: #1a1a2e;
+        }
+        .filter-btn[data-filter="satellite"] {
+            --active-bg: #9b59b6;
+            --active-border: #9b59b6;
+            --active-text: #fff;
+            border-color: #9b59b6;
+            color: #9b59b6;
+        }
+        .filter-btn[data-filter="satellite"]:hover {
+            background: #9b59b6;
+            color: #fff;
+        }
+        .filter-btn[data-filter="fednet"] {
+            --active-bg: #ff5c00;
+            --active-border: #ff5c00;
+            --active-text: #000;
+            border-color: #ff5c00;
+            color: #ff5c00;
+        }
+        .filter-btn[data-filter="fednet"]:hover {
+            background: #ff5c00;
+            color: #000;
+        }
+
+        /* ── Grid ── */
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px 22px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-top: 5px solid;
+            display: flex;
+            flex-direction: column;
+            color: #222;
+            transition: var(--transition);
+            flex: 0 0 auto;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card .icon {
+            font-size: 36px;
+            margin-bottom: 4px;
+        }
+        .card .badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border: 1px solid;
+        }
+        .card h3 {
+            font-size: 20px;
+            margin: 4px 0 2px;
+            color: #1a1a2e;
+        }
+        .card .plan-sub {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 2px;
+        }
+        .card .price {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 6px 0;
+            color: #1a1a2e;
+        }
+        .card .price small {
+            font-size: 14px;
+            font-weight: 400;
+            color: #888;
+        }
+        .card .speed {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin: 2px 0;
+        }
+        .card .meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin: 2px 0;
+        }
+        .card .best-for {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #555;
+            margin: 4px 0 8px;
+            padding: 2px 12px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            display: inline-block;
+            width: fit-content;
+        }
+        .card .features {
+            margin: 8px 0 4px;
+            padding-left: 20px;
+            font-size: 0.82rem;
+            color: #444;
+            flex-grow: 1;
+        }
+        .card .features li {
+            margin-bottom: 2px;
+        }
+
+        .btn-isp {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 12px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-isp:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .fine {
+            font-size: 11px;
+            color: #999;
+            margin-top: 12px;
+        }
+
+        /* ── FED-NET Special Card ── */
+        .card.fednet-card {
+            background: #0c0f1c;
+            color: white;
+            border-top-color: #ff5c00;
+            border: 2px solid #ff5c00;
+        }
+        .card.fednet-card:hover {
+            border-color: #ff7a2f;
+            box-shadow: 0 8px 40px rgba(255, 92, 0, 0.15);
+        }
+        .card.fednet-card .price {
+            color: #ffaa44;
+        }
+        .card.fednet-card .btn-isp {
+            background: #ff5c00;
+            color: #000;
+            font-weight: 700;
+        }
+        .card.fednet-card .btn-isp:hover {
+            background: #ff7a2f;
+            box-shadow: 0 6px 20px rgba(255, 92, 0, 0.4);
+        }
+        .card.fednet-card .badge {
+            background: rgba(255, 92, 0, 0.2);
+            color: #ffaa77;
+            border-color: #ff5c00;
+        }
+        .card.fednet-card .fed-title {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, #ffaa66);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 4px 0;
+        }
+        .card.fednet-card h3,
+        .card.fednet-card .price,
+        .card.fednet-card .features,
+        .card.fednet-card .fine,
+        .card.fednet-card .meta,
+        .card.fednet-card .speed,
+        .card.fednet-card .best-for {
+            color: #fff;
+        }
+        .card.fednet-card .features {
+            color: #ddd;
+        }
+        .card.fednet-card .fine {
+            color: #aaa;
+        }
+        .card.fednet-card .best-for {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffaa66;
+        }
+        .card.fednet-card .plan-sub {
+            color: #aaa;
+        }
+
+        /* ── Footer Note ── */
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+        .footer-note a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .grid {
+                gap: 16px;
+            }
+            .card {
+                width: 45% !important;
+                height: auto !important;
+                min-height: 100px !important;
+                padding: 18px 16px !important;
+                flex: 1 1 45% !important;
+            }
+            .card .icon {
+                font-size: 28px !important;
+            }
+            .card h3 {
+                font-size: 17px !important;
+            }
+            .card .price {
+                font-size: 22px !important;
+            }
+            .card .speed {
+                font-size: 0.85rem !important;
+            }
+            .card .features {
+                font-size: 0.75rem !important;
+                padding-left: 16px !important;
+            }
+            .btn-isp {
+                font-size: 0.8rem !important;
+                padding: 8px 16px !important;
+            }
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            .filter-bar {
+                gap: 8px;
+            }
+            .filter-btn {
+                padding: 6px 16px;
+                font-size: 0.75rem;
+            }
+            .card.fednet-card .fed-title {
+                font-size: 22px !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+            .card {
+                padding: 16px 14px !important;
+                width: 100% !important;
+                flex: 1 1 100% !important;
+                min-width: unset !important;
+                min-height: unset !important;
+                height: auto !important;
+            }
+            .card .icon {
+                font-size: 24px !important;
+            }
+            .card h3 {
+                font-size: 16px !important;
+            }
+            .card .price {
+                font-size: 20px !important;
+            }
+            .card .fed-title {
+                font-size: 22px !important;
+            }
+            .btn-isp {
+                font-size: 0.8rem !important;
+                padding: 8px 14px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── UNIFIED NAVIGATION ── -->
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-bolt"></i> FED-OS
+                <span class="badge">BETA</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="forum.html">Forum</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="isp.html" class="active">ISP</a></li>
+                <li><a href="sr-pro.html">SR-Pro</a></li>
+                <li><a href="poster.html">Poster</a></li>
+                <li>
+                    <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" class="btn btn-outline btn-sm">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                </li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ── PAGE CONTENT ── -->
+    <div class="page-content">
+        <div class="isp-container">
+
+            <div class="page-header">
+                <h1>Compare <span>Internet Plans</span></h1>
+                <p>Cheaper plans are shown larger — expensive plans are smaller. (Text stays readable!)</p>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar" id="filterBar">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="fiber">🌐 Fiber</button>
+                <button class="filter-btn" data-filter="5g">📡 5G</button>
+                <button class="filter-btn" data-filter="cable">📺 Cable</button>
+                <button class="filter-btn" data-filter="satellite">🛰️ Satellite</button>
+                <button class="filter-btn" data-filter="fednet">⚡ FED-NET</button>
+            </div>
+
+            <!-- ISP Grid -->
+            <div class="grid" id="ispGrid"></div>
+
+            <p class="footer-note">* Competitor plans for illustration only. FED-NET is an informational framework. Prices and availability vary by location.</p>
+
+        </div>
+    </div>
+
+    <!-- ── NAV TOGGLE SCRIPT ── -->
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('is-open');
+            navToggle.querySelector('i').className = navLinks.classList.contains('is-open') ?
+                'fas fa-times' : 'fas fa-bars';
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('is-open');
+                navToggle.querySelector('i').className = 'fas fa-bars';
+            });
+        });
+
+        // ── Provider Data ──
+        const providers = [
+            {
+                id: 'starlink-satellite',
+                icon: '🛰️',
+                name: 'Starlink',
+                plan: 'Standard',
+                price: '$120',
+                period: '/mo',
+                speed: '50–200 Mbps',
+                type: 'satellite',
+                dataCap: 'No cap (fair use)',
+                contract: 'No contract',
+                bestFor: '🌍 Best for remote',
+                color: '#9b59b6',
+                btnTextColor: '#fff',
+                badgeBg: '#f3e8ff',
+                badgeColor: '#6c3483',
+                features: ['Low‑latency satellite', 'Hardware $599', 'Global coverage']
+            }, {
+                id: 'viasat-satellite',
+                icon: '🌍',
+                name: 'Viasat',
+                plan: 'Unlimited 50',
+                price: '$99.99',
+                period: '/mo',
+                speed: '50 Mbps',
+                type: 'satellite',
+                dataCap: '150 GB priority',
+                contract: '12‑mo',
+                bestFor: '📦 Higher data cap',
+                color: '#0066b3',
+                btnTextColor: '#fff',
+                badgeBg: '#dce8f5',
+                badgeColor: '#004a80',
+                features: ['50 Mbps download', '150 GB priority data', 'Nationwide coverage']
+            }, {
+                id: 'google-fiber',
+                icon: '🌐',
+                name: 'Google Fiber',
+                plan: '1 Gig',
+                price: '$70',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🏆 Fastest fiber',
+                color: '#009fda',
+                btnTextColor: '#fff',
+                badgeBg: '#e1f0fa',
+                badgeColor: '#0072b0',
+                features: ['Symmetrical gigabit', 'Free install', 'Includes Wi‑Fi 6 router']
+            }, {
+                id: 'metronet-fiber',
+                icon: '🌐',
+                name: 'MetroNet',
+                plan: 'Gigabit',
+                price: '$69.99',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🌾 Midwest fiber',
+                color: '#00a651',
+                btnTextColor: '#fff',
+                badgeBg: '#e6f4ea',
+                badgeColor: '#1e7e34',
+                features: ['Symmetrical gigabit', 'No data caps', 'Free installation']
+            }, {
+                id: 'altafiber',
+                icon: '📶',
+                name: 'AltaFiber',
+                plan: 'Gigabit',
+                price: '$65',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🏠 Ohio Valley fiber',
+                color: '#005bbb',
+                btnTextColor: '#fff',
+                badgeBg: '#dce8f5',
+                badgeColor: '#004a80',
+                features: ['Symmetrical gigabit', 'No data caps', 'Free installation']
+            }, {
+                id: 'hughesnet-satellite',
+                icon: '📡',
+                name: 'HughesNet',
+                plan: '25 GB',
+                price: '$64.99',
+                period: '/mo',
+                speed: '25 Mbps',
+                type: 'satellite',
+                dataCap: '50 GB soft cap',
+                contract: '24‑mo term',
+                bestFor: '🛰️ Budget satellite',
+                color: '#00529b',
+                btnTextColor: '#fff',
+                badgeBg: '#e0ecf7',
+                badgeColor: '#00427a',
+                features: ['25 Mbps download', '50 GB data cap', '24‑month term']
+            }, {
+                id: 'zippy-fiber',
+                icon: '⚡',
+                name: 'Ziply Fiber',
+                plan: 'Gigabit',
+                price: '$60',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🚀 Pacific NW favorite',
+                color: '#0066cc',
+                btnTextColor: '#fff',
+                badgeBg: '#dce6f5',
+                badgeColor: '#004a99',
+                features: ['Symmetrical gigabit', 'No data caps', 'Free install']
+            }, {
+                id: 'windstream-fiber',
+                icon: '🌬️',
+                name: 'Windstream (Kinetic)',
+                plan: 'Gigabit',
+                price: '$59.99',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🌾 Rural fiber leader',
+                color: '#0077be',
+                btnTextColor: '#fff',
+                badgeBg: '#dce8f5',
+                badgeColor: '#004a80',
+                features: ['Symmetrical gigabit', 'No data caps', 'Price for life']
+            }, {
+                id: 'fidium-fiber',
+                icon: '🔷',
+                name: 'Fidium (Consolidated)',
+                plan: 'Gigabit',
+                price: '$55',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '📦 New England fiber',
+                color: '#00b4d8',
+                btnTextColor: '#fff',
+                badgeBg: '#e0f2f7',
+                badgeColor: '#0084a8',
+                features: ['Symmetrical gigabit', 'No data caps', 'Free Wi‑Fi router']
+            }, {
+                id: 'tmobile-5g',
+                icon: '📡',
+                name: 'T‑Mobile',
+                plan: '5G Home Internet',
+                price: '$50',
+                period: '/mo',
+                speed: '134–415 Mbps',
+                type: '5g',
+                dataCap: 'Unlimited data',
+                contract: 'No contract',
+                bestFor: '📱 Best 5G for rural',
+                color: '#e20074',
+                btnTextColor: '#fff',
+                badgeBg: '#fce4ec',
+                badgeColor: '#c2185b',
+                features: ['Unlimited data', '15‑day trial', 'Price Lock guarantee']
+            }, {
+                id: 'verizon-5g',
+                icon: '📱',
+                name: 'Verizon',
+                plan: '5G Home Plus',
+                price: '$50',
+                period: '/mo',
+                speed: '85–300 Mbps',
+                type: '5g',
+                dataCap: 'No data caps',
+                contract: '4‑yr price lock',
+                bestFor: '🔒 Longest price lock',
+                color: '#ff0000',
+                btnTextColor: '#fff',
+                badgeBg: '#ffe5e5',
+                badgeColor: '#b80000',
+                features: ['Free router', '4‑year price lock', 'No data caps']
+            }, {
+                id: 'centurylink-fiber',
+                icon: '🔗',
+                name: 'CenturyLink',
+                plan: 'Fiber Gigabit',
+                price: '$50',
+                period: '/mo',
+                speed: '940 / 940 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'Price for life',
+                bestFor: '🔄 Price for life',
+                color: '#00529b',
+                btnTextColor: '#fff',
+                badgeBg: '#e0ecf7',
+                badgeColor: '#00427a',
+                features: ['Price for life guarantee', 'No contract', 'Free modem']
+            }, {
+                id: 'frontier-fiber',
+                icon: '🚀',
+                name: 'Frontier',
+                plan: 'Fiber 500',
+                price: '$49.99',
+                period: '/mo',
+                speed: '500 / 500 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '⚖️ Balanced speed',
+                color: '#0066b3',
+                btnTextColor: '#fff',
+                badgeBg: '#dce8f5',
+                badgeColor: '#004a80',
+                features: ['Symmetrical 500', 'No data caps', 'Free installation']
+            }, {
+                id: 'sonic-fiber',
+                icon: '🎵',
+                name: 'Sonic',
+                plan: 'Gigabit Fiber',
+                price: '$49.99',
+                period: '/mo',
+                speed: '1000 / 1000 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🏆 Best CA fiber',
+                color: '#00a3a8',
+                btnTextColor: '#fff',
+                badgeBg: '#e0f2f2',
+                badgeColor: '#007a7a',
+                features: ['Symmetrical gigabit', 'No data caps', 'Price for life']
+            }, {
+                id: 'brightspeed-fiber',
+                icon: '💡',
+                name: 'Brightspeed',
+                plan: 'Fiber 500',
+                price: '$49.99',
+                period: '/mo',
+                speed: '500 / 500 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '💡 Emerging fiber',
+                color: '#f7931e',
+                btnTextColor: '#fff',
+                badgeBg: '#fef0e0',
+                badgeColor: '#c47d00',
+                features: ['Symmetrical 500', 'No data caps', 'Price lock']
+            }, {
+                id: 'cox-cable',
+                icon: '🌊',
+                name: 'Cox',
+                plan: 'Internet 250',
+                price: '$49.99',
+                period: '/mo',
+                speed: '250 Mbps',
+                type: 'cable',
+                dataCap: '1.25 TB cap',
+                contract: '12‑mo intro',
+                bestFor: '🎮 Good for gamers',
+                color: '#0066b3',
+                btnTextColor: '#fff',
+                badgeBg: '#dce8f5',
+                badgeColor: '#004a80',
+                features: ['250 Mbps download', '1.25 TB data cap', 'Free modem']
+            }, {
+                id: 'xfinity-cable',
+                icon: '📺',
+                name: 'Xfinity',
+                plan: 'Connect 300',
+                price: '$40',
+                period: '/mo',
+                speed: '300 Mbps',
+                type: 'cable',
+                dataCap: '1.2 TB cap',
+                contract: '1‑yr agreement',
+                bestFor: '📺 Best bundle deals',
+                color: '#0b3b5f',
+                btnTextColor: '#fff',
+                badgeBg: '#e6f0ff',
+                badgeColor: '#0b3b5f',
+                features: ['300 Mbps download', 'Free modem', 'Includes mobile line']
+            }, {
+                id: 'att-fiber',
+                icon: '⚡',
+                name: 'AT&T Fiber',
+                plan: 'Fiber 300',
+                price: '$40',
+                period: '/mo',
+                speed: '300 / 300 Mbps',
+                type: 'fiber',
+                dataCap: 'No data caps',
+                contract: '12‑mo price lock',
+                bestFor: '💰 Best value fiber',
+                color: '#009fda',
+                btnTextColor: '#fff',
+                badgeBg: '#e1f0fa',
+                badgeColor: '#0072b0',
+                features: ['Symmetrical speeds', '$150 reward card', 'Free modem']
+            }, {
+                id: 'optimum-cable',
+                icon: '📶',
+                name: 'Optimum',
+                plan: '300 Mbps',
+                price: '$40',
+                period: '/mo',
+                speed: '300 Mbps',
+                type: 'cable',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '📦 No contract',
+                color: '#0055a4',
+                btnTextColor: '#fff',
+                badgeBg: '#dce6f2',
+                badgeColor: '#003d7a',
+                features: ['300 Mbps download', 'No data caps', 'Free Wi‑Fi router']
+            }, {
+                id: 'wave-cable',
+                icon: '🌊',
+                name: 'Wave (Astound)',
+                plan: 'Internet 300',
+                price: '$39.99',
+                period: '/mo',
+                speed: '300 Mbps',
+                type: 'cable',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🌊 West Coast cable',
+                color: '#0055a4',
+                btnTextColor: '#fff',
+                badgeBg: '#dce6f2',
+                badgeColor: '#003d7a',
+                features: ['300 Mbps download', 'No data caps', 'Free Wi‑Fi router']
+            }, {
+                id: 'breezeline-cable',
+                icon: '💨',
+                name: 'Breezeline',
+                plan: 'Internet 200',
+                price: '$39.99',
+                period: '/mo',
+                speed: '200 Mbps',
+                type: 'cable',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🌲 Northeast cable',
+                color: '#0077be',
+                btnTextColor: '#fff',
+                badgeBg: '#dce8f5',
+                badgeColor: '#004a80',
+                features: ['200 Mbps download', 'No data caps', 'Free modem']
+            }, {
+                id: 'rcn-cable',
+                icon: '📡',
+                name: 'RCN (Astound)',
+                plan: 'Internet 300',
+                price: '$34.99',
+                period: '/mo',
+                speed: '300 Mbps',
+                type: 'cable',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '🗽 Northeast cable',
+                color: '#003366',
+                btnTextColor: '#fff',
+                badgeBg: '#dce6f2',
+                badgeColor: '#002244',
+                features: ['300 Mbps download', 'No data caps', 'Free modem']
+            }, {
+                id: 'mint-5g',
+                icon: '🍃',
+                name: 'MINT 5G',
+                plan: 'Unlimited 5G',
+                price: '$30',
+                period: '/mo',
+                speed: '133–415 Mbps',
+                type: '5g',
+                dataCap: 'Unlimited',
+                contract: '12‑mo prepay',
+                bestFor: '💸 Cheapest 5G',
+                color: '#00c853',
+                btnTextColor: '#fff',
+                badgeBg: '#e8f5e9',
+                badgeColor: '#2e7d32',
+                features: ['Free 5G gateway', 'Unlimited data', 'New customers only']
+            }, {
+                id: 'mediacom-cable',
+                icon: '📊',
+                name: 'Mediacom',
+                plan: 'Internet 100',
+                price: '$29.99',
+                period: '/mo',
+                speed: '100 Mbps',
+                type: 'cable',
+                dataCap: '500 GB cap',
+                contract: '12‑mo promo',
+                bestFor: '🌾 Rural cable option',
+                color: '#006b3f',
+                btnTextColor: '#fff',
+                badgeBg: '#e2f0e8',
+                badgeColor: '#004d2d',
+                features: ['100 Mbps download', '500 GB data cap', 'Free modem']
+            }, {
+                id: 'spectrum-cable',
+                icon: '📈',
+                name: 'Spectrum',
+                plan: 'Internet 30',
+                price: '$25',
+                period: '/mo',
+                speed: '30 Mbps / 5 up',
+                type: 'cable',
+                dataCap: 'No data caps',
+                contract: 'No contract',
+                bestFor: '💵 Cheapest basic',
+                color: '#ffb81c',
+                btnTextColor: '#1a1a2e',
+                badgeBg: '#fff4e0',
+                badgeColor: '#c47d00',
+                features: ['30 Mbps download', 'Free modem', '30‑day money‑back']
+            }, {
+                id: 'fednet',
+                icon: '🔓',
+                name: 'FED-NET',
+                plan: 'Private Protocol',
+                price: '$9.99',
+                period: '/mo',
+                speed: 'Uses your cell plan – 16ms',
+                type: 'fednet',
+                dataCap: 'None (uses existing data)',
+                contract: 'No contract',
+                bestFor: '🔥 $0 monthly internet bill',
+                color: '#ff5c00',
+                btnTextColor: '#000',
+                badgeBg: 'rgba(255,92,0,0.2)',
+                badgeColor: '#ffaa77',
+                features: ['✓ Uses your existing cell plan', '✓ Encrypted private lane', '✓ Includes FED‑NET Newsletter'],
+                isFedNet: true,
+                link: 'https://theworldtrade.gumroad.com/l/jegcn'
+            }
+        ];
+
+        // ── Render Cards ──
+        const grid = document.getElementById('ispGrid');
+
+        function renderCards(filter) {
+            grid.innerHTML = '';
+            let filtered = providers.filter(p => filter === 'all' || p.type === filter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:#888; padding:40px 0;">No providers found for this category.</p>`;
+                return;
+            }
+
+            const getNumericPrice = (p) => parseFloat(p.price.replace('$', ''));
+            const prices = filtered.map(p => getNumericPrice(p));
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const range = maxPrice - minPrice || 1;
+
+            // Dramatic but readable: min width 160px, max width 480px
+            const minWidth = 160;
+            const maxWidth = 480;
+
+            filtered.forEach(p => {
+                const priceNum = getNumericPrice(p);
+                const ratio = (maxPrice - priceNum) / range;
+                const width = Math.round(minWidth + ratio * (maxWidth - minWidth));
+                const cardWidth = Math.min(Math.max(width, minWidth), maxWidth);
+
+                const card = document.createElement('div');
+                card.className = `card ${p.isFedNet ? 'fednet-card' : ''}`;
+                card.style.borderTopColor = p.color;
+                card.style.width = cardWidth + 'px';
+                card.style.flex = '0 1 auto';
+
+                let titleHtml = '';
+                if (p.isFedNet) {
+                    titleHtml = `<div class="fed-title">${p.name}</div>`;
+                } else {
+                    titleHtml = `<h3>${p.icon} ${p.name}</h3>`;
+                }
+
+                let priceHtml = '';
+                if (p.isFedNet) {
+                    priceHtml = `${p.price}<small>${p.period}</small> <span style="font-size:14px; color:#ffaa44;">or $29 one‑time</span>`;
+                } else {
+                    priceHtml = `${p.price}<small>${p.period}</small>`;
+                }
+
+                const featuresHtml = p.features.map(f => `<li>${f}</li>`).join('');
+                const btnStyle = `background:${p.color}; color:${p.btnTextColor};`;
+
+                card.innerHTML = `
+                            ${titleHtml}
+                            <div class="plan-sub">${p.plan}</div>
+                            <div class="price">${priceHtml}</div>
+                            <div class="speed">📶 ${p.speed}</div>
+                            <div class="meta">📊 ${p.dataCap}</div>
+                            <div class="meta">📄 ${p.contract}</div>
+                            <div class="best-for">${p.bestFor}</div>
+                            <div class="badge" style="background:${p.badgeBg}; color:${p.badgeColor}; border-color:${p.color};">${p.type.toUpperCase()}</div>
+                            <ul class="features">${featuresHtml}</ul>
+                            <a href="${p.isFedNet ? p.link : '#'}" target="${p.isFedNet ? '_blank' : '_self'}" class="btn-isp" style="${btnStyle}">${p.isFedNet ? '🔓 GET FED-NET' : 'View Deal →'}</a>
+                            <div class="fine">${p.isFedNet ? 'Subscribe $9.99/mo or lifetime $29. No contracts.' : 'Check availability in your area.'}</div>
+                        `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // ── Filter Logic ──
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderCards(btn.dataset.filter);
+            });
+        });
+
+        // ── Initial Render ──
+        renderCards('all');
+    </script>
+
+</body>
+</html>
