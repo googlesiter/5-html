@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Saas - Buy, Sell & Share SaaS Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-white {
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.25);
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+        }
+        .tab-active {
+            background-color: #6366f1 !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Coming Soon Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+            animation: popIn 0.3s ease;
+        }
+        .dark .modal-box {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-close {
+            margin-top: 1.5rem;
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.6rem 2rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-close:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 antialiased">
+
+    <!-- ============================================ -->
+    <!-- COMING SOON MODAL                            -->
+    <!-- ============================================ -->
+    <div id="comingSoonModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="text-6xl mb-4">🚀</div>
+            <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Coming Soon</h3>
+            <p class="text-slate-600 dark:text-slate-300 mt-2 text-sm">
+                This feature is under development. We'll notify you when it's ready!
+            </p>
+            <button class="modal-close" id="modalCloseBtn">Got it</button>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- NAVIGATION                                   -->
+    <!-- ============================================ -->
+    <nav class="glass-nav fixed w-full z-50 px-6 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl font-extrabold gradient-text">@Saas</span>
+                <span class="text-xs bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full font-semibold">BETA</span>
+            </div>
+            <div class="hidden md:flex flex-1 max-w-xl mx-8">
+                <div class="relative w-full">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" placeholder="Search concepts, boilerplates, micro-SaaS..."
+                           class="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800/50 border-0 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none transition" />
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="hidden sm:flex text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition px-4 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fas fa-plus mr-2"></i> List Idea
+                </button>
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">
+                    <i class="fas fa-rocket mr-2"></i> Get Started
+                </button>
+                <button class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-600 transition">
+                    <i class="fas fa-user text-slate-700 dark:text-slate-300"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- HERO SECTION                                 -->
+    <!-- ============================================ -->
+    <section class="pt-28 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <i class="fas fa-sparkles text-xs"></i>
+                At Last — a place for SaaS builders
+            </div>
+            <h1 class="font-extrabold leading-tight">
+                <span class="block text-5xl md:text-7xl">
+                    <span class="glow-white">Buy, Sell & Share</span>
+                    <span class="gradient-text">SaaS Concepts</span>
+                </span>
+                <span class="block text-2xl md:text-3xl font-semibold text-slate-600 dark:text-slate-400 mt-2">
+                    Without the Corporate Overhead
+                </span>
+            </h1>
+            <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl mt-4 max-w-2xl mx-auto">
+                From raw blueprints to functional micro-SaaS — find your next project or
+                monetize your abandoned ideas.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-semibold shadow-xl shadow-indigo-600/30 transition flex items-center gap-2">
+                    <i class="fas fa-store"></i> Explore Marketplace
+                </button>
+                <button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 px-8 py-3.5 rounded-xl font-semibold text-slate-700 dark:text-slate-300 transition flex items-center gap-2">
+                    <i class="fas fa-code"></i> View Open Source
+                </button>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 mt-10 text-sm text-slate-500 dark:text-slate-400">
+                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> No listing fees</span>
+                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> 5% take rate</span>
+                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> Verified repos</span>
+                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> Escrow protected</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- CATEGORY FILTER BAR                          -->
+    <!-- ============================================ -->
+    <div class="max-w-7xl mx-auto px-6 -mt-2 mb-8">
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-4" id="tabContainer">
+            <button class="tab-btn tab-active px-5 py-2 bg-indigo-600 text-white rounded-full text-sm font-semibold shadow-md shadow-indigo-600/20" data-filter="all">🔥 All</button>
+            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="blueprint">📐 Blueprints</button>
+            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="boilerplate">⚡ Boilerplates</button>
+            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="micro_saas">💰 Micro‑SaaS</button>
+            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="collab">🤝 Collab</button>
+            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="dev_tooling">🛠️ Dev Tooling</button>
+            <button class="px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                <i class="fas fa-plus text-xs mr-1"></i> More
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TRENDING CONCEPTS (6 totally novel ideas)    -->
+    <!-- ============================================ -->
+    <div class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-slate-800 dark:text-white">
+                <i class="fas fa-fire text-orange-500 mr-2"></i> Trending Concepts
+            </h2>
+            <span class="text-sm text-slate-500 dark:text-slate-400" id="resultCount">6 listings this week</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="listingsGrid">
+
+            <!-- 1: Attention Debt Manager -->
+            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="blueprint">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Attention Debt</span>
+                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$79</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Attention Debt Manager</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Tracks every pending reply, unread message, and task you've "owed" to others. Schedules focused "attention repayment" blocks and gamifies clearing your inbox debt.</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><i class="far fa-user mr-1"></i> 47 saves</span>
+                    <span><i class="far fa-comment mr-1"></i> 12 comments</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">AD</div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@attentiondev</span>
+                    <span class="text-xs text-slate-400 ml-auto">2 days ago</span>
+                </div>
+                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+            </div>
+
+            <!-- 2: Micro-Cloud Orchestrator -->
+            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="boilerplate">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full font-semibold">⚡ Micro‑Cloud</span>
+                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$199</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Micro‑Cloud Orchestrator</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A personal cloud broker that spreads your files across Backblaze, Wasabi, and Storj – with automatic redundancy, erasure coding, and a single unified mount point.</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><i class="fas fa-code mr-1"></i> 89 stars</span>
+                    <span><i class="far fa-comment mr-1"></i> 18 comments</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs font-bold text-emerald-600 dark:text-emerald-300">MC</div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@microcloud</span>
+                    <span class="text-xs text-slate-400 ml-auto">4 days ago</span>
+                </div>
+                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+            </div>
+
+            <!-- 3: Digital Hoarders Organizer -->
+            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover relative overflow-hidden" data-category="micro_saas">
+                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl">🔥 NEW</div>
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">💰 Hoarder</span>
+                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$149</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">SaaS for Digital Hoarders</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Uses local embeddings to auto‑organise your bookmarks, notes, and screenshots into a semantic knowledge graph – so you can finally find that one article from 3 years ago.</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><i class="fas fa-download mr-1"></i> 34 purchases</span>
+                    <span><i class="far fa-comment mr-1"></i> 9 comments</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-xs font-bold text-rose-600 dark:text-rose-300">DH</div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@digitalhoarder</span>
+                    <span class="text-xs text-slate-400 ml-auto">1 day ago</span>
+                </div>
+                <button class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">Buy Now →</button>
+            </div>
+
+            <!-- 4: Ethical Data Broker -->
+            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="collab">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full font-semibold">🤝 Data Ethics</span>
+                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Free</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Ethical Data Broker</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Let users sell their anonymised browsing data to researchers – full transparency, opt‑out at any time, and you get paid for your digital footprint.</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><i class="fas fa-users mr-1"></i> 6/12 spots filled</span>
+                    <span><i class="far fa-comment mr-1"></i> 24 comments</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-xs font-bold text-cyan-600 dark:text-cyan-300">EB</div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@ethicbroker</span>
+                    <span class="text-xs text-slate-400 ml-auto">5 days ago</span>
+                </div>
+                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">Join Project →</button>
+            </div>
+
+            <!-- 5: Event-Driven CI/CD for Non-Coders -->
+            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="dev_tooling">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-full font-semibold">🛠️ Event CI/CD</span>
+                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$69</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Event‑Driven CI/CD for Non‑Coders</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Visual workflow builder that triggers deployments based on business events (e.g., a new Stripe subscription, a Slack message, or a calendar invite). No YAML required.</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><i class="fas fa-download mr-1"></i> 27 purchases</span>
+                    <span><i class="far fa-comment mr-1"></i> 11 comments</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">EC</div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@eventcd</span>
+                    <span class="text-xs text-slate-400 ml-auto">3 days ago</span>
+                </div>
+                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+            </div>
+
+            <!-- 6: AI-Driven Interview Coach -->
+            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="blueprint">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Interview AI</span>
+                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$99</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">AI‑Driven Interview Coach</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Simulates interviews with AI personas that adapt to your industry – gives real‑time feedback on tone, filler words, and body language (via webcam).</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                    <span><i class="far fa-user mr-1"></i> 56 saves</span>
+                    <span><i class="far fa-comment mr-1"></i> 15 comments</span>
+                </div>
+                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <div class="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300">IC</div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@interviewcoach</span>
+                    <span class="text-xs text-slate-400 ml-auto">2 days ago</span>
+                </div>
+                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+            </div>
+
+        </div>
+
+        <!-- Load More -->
+        <div class="text-center mt-10">
+            <button class="px-8 py-3 border border-slate-300 dark:border-slate-700 hover:border-indigo-400 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 transition">
+                <i class="fas fa-chevron-down mr-2"></i> Load More Concepts
+            </button>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- POPULAR CONCEPTS (6 more novel ideas)        -->
+        <!-- ============================================ -->
+        <div class="mt-16">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-2xl">⭐</span>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-white">
+                    Popular Concepts
+                </h2>
+                <span class="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-2.5 py-0.5 rounded-full font-semibold">Top rated</span>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                The most bookmarked and discussed SaaS ideas on the platform.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- 7: Reverse Job Board -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Reverse Job</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$89</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Reverse Job Board</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Companies post their culture, challenges, and values. Candidates "apply" by submitting solutions to a sample task – not a resume. Hiring becomes a showcase of skill.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="far fa-bookmark mr-1"></i> 92 saves</span>
+                        <span><i class="far fa-comment mr-1"></i> 29 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">RJ</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@reversejobs</span>
+                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.9</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 8: Digital Twin for Finances -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full font-semibold">⚡ Finance Twin</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$149</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Digital Twin for Personal Finances</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Creates a virtual replica of your spending habits and simulates "what if" scenarios – like taking a sabbatical, buying a home, or investing in crypto – to show the long‑term impact.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="far fa-bookmark mr-1"></i> 67 saves</span>
+                        <span><i class="far fa-comment mr-1"></i> 21 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs font-bold text-emerald-600 dark:text-emerald-300">DT</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@digitaltwin</span>
+                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.8</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 9: Collaborative API Playground -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl">⭐ EDITOR'S PICK</div>
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">💰 API Playground</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$249</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Collaborative API Playground</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A shared workspace where teams design, mock, and test APIs together – with live docs, versioned examples, and a built‑in Postman‑like client.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-download mr-1"></i> 48 purchases</span>
+                        <span><i class="far fa-comment mr-1"></i> 16 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-xs font-bold text-rose-600 dark:text-rose-300">AP</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@apiplayground</span>
+                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.9</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">Buy Now →</button>
+                </div>
+
+                <!-- 10: Dark Pattern Detector -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full font-semibold">🤝 Dark Patterns</span>
+                        <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Free</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Dark Pattern Detector</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A browser extension that scans websites for manipulative UI patterns (hidden costs, forced urgency, misdirection) and alerts you with a simple warning badge.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-users mr-1"></i> 11/15 spots filled</span>
+                        <span><i class="far fa-comment mr-1"></i> 34 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-xs font-bold text-cyan-600 dark:text-cyan-300">DP</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@darkpattern</span>
+                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.7</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">Join Project →</button>
+                </div>
+
+                <!-- 11: Water Cooler Chat Bot -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-full font-semibold">🛠️ Water Cooler</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$29</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Water Cooler Chat Bot</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A Slack/Discord bot that facilitates random, topic‑based pairing for remote teams – recreates the office water cooler banter, with icebreaker prompts.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-download mr-1"></i> 73 purchases</span>
+                        <span><i class="far fa-comment mr-1"></i> 19 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">WC</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@watercooler</span>
+                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.8</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 12: Low-Code Data Pipeline Builder -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Data Pipeline</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$119</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Low‑Code Data Pipeline Builder</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Drag‑and‑drop ETL pipelines that output to SQL, CSV, or APIs – with built‑in monitoring, error handling, and scheduling. No Python required.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="far fa-bookmark mr-1"></i> 38 saves</span>
+                        <span><i class="far fa-comment mr-1"></i> 14 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300">DP</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@datapipeline</span>
+                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.6</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+            </div>
+        </div>
+        <!-- ============================================ -->
+        <!-- END POPULAR CONCEPTS SECTION                -->
+        <!-- ============================================ -->
+
+        <!-- ============================================ -->
+        <!-- FRONTEND-FIRST CONCEPTS (6 more)            -->
+        <!-- ============================================ -->
+        <div class="mt-16">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-2xl">🎨</span>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-white">
+                    Frontend-First Concepts
+                </h2>
+                <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-2.5 py-0.5 rounded-full font-semibold">No backend required</span>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
+                Design‑heavy, UI‑first, and no‑code ideas where the value is in the frontend experience.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- 13: CSS Art Generator -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🎨 CSS Art</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$59</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">CSS Art Generator</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Turn simple sketches into CSS‑only art using neural style transfer – runs entirely in your browser. Export as pure CSS or SVG.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="far fa-bookmark mr-1"></i> 44 saves</span>
+                        <span><i class="far fa-comment mr-1"></i> 8 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-pink-100 dark:bg-pink-900/40 flex items-center justify-center text-xs font-bold text-pink-600 dark:text-pink-300">CA</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@cssart</span>
+                        <span class="text-xs text-slate-400 ml-auto">1 day ago</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 14: Personal History Timeline -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">✨ Timeline</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$39</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Interactive Personal History Timeline</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Map out your life events with photos, videos, and text. Create a private, shareable web page that tells your story – like a living biography.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-download mr-1"></i> 22 purchases</span>
+                        <span><i class="far fa-comment mr-1"></i> 6 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">HT</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@historytimeline</span>
+                        <span class="text-xs text-slate-400 ml-auto">3 days ago</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 15: Variable Font Playground -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl">🚀 POPULAR</div>
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🧩 Typography</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$49</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Variable Font Playground</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Real‑time tool to tweak every axis of variable fonts – see the effect instantly on sample text. Export the exact CSS configuration for your project.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-download mr-1"></i> 86 purchases</span>
+                        <span><i class="far fa-comment mr-1"></i> 12 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-xs font-bold text-rose-600 dark:text-rose-300">VF</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@varfont</span>
+                        <span class="text-xs text-slate-400 ml-auto">2 days ago</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">Buy Now →</button>
+                </div>
+
+                <!-- 16: Voice-Activated Portfolio Builder -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🎙️ Voice</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$69</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Voice‑Activated Portfolio Builder</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Speak about your work and skills – the app transcribes, summarises, and builds a beautiful portfolio website with sections, all from your voice.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="far fa-bookmark mr-1"></i> 31 saves</span>
+                        <span><i class="far fa-comment mr-1"></i> 5 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300">VB</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@voicebuild</span>
+                        <span class="text-xs text-slate-400 ml-auto">5 days ago</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 17: Emoji Mood Tracker -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">😊 Mood</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$19</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Emoji Mood Tracker</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A daily journal that uses emoji combos to capture your mood. See a beautiful heatmap calendar that reveals your emotional patterns over time.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-download mr-1"></i> 54 purchases</span>
+                        <span><i class="far fa-comment mr-1"></i> 10 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-xs font-bold text-cyan-600 dark:text-cyan-300">EM</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@emojimood</span>
+                        <span class="text-xs text-slate-400 ml-auto">1 week ago</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+                <!-- 18: Minimalist Code Snippet Organizer -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🧩 Snippets</span>
+                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$29</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Minimalist Code Snippet Organizer</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A clean, local‑first repository for your code snippets. Tag, search, and copy instantly – no cloud, no bloat, just pure utility.</p>
+                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
+                        <span><i class="fas fa-download mr-1"></i> 41 purchases</span>
+                        <span><i class="far fa-comment mr-1"></i> 7 comments</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs font-bold text-emerald-600 dark:text-emerald-300">SO</div>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@snippetorg</span>
+                        <span class="text-xs text-slate-400 ml-auto">2 weeks ago</span>
+                    </div>
+                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
+                </div>
+
+            </div>
+        </div>
+        <!-- ============================================ -->
+        <!-- END FRONTEND-FIRST SECTION                  -->
+        <!-- ============================================ -->
+
+        <!-- ============================================ -->
+        <!-- ABOUT @SAAS - Platform Features              -->
+        <!-- ============================================ -->
+        <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-800">
+            <div class="max-w-3xl mx-auto text-center mb-6">
+                <p class="text-lg md:text-xl font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <span class="gradient-text font-bold">@Saas</span> is the first dedicated hub where indie developers, ideators, and builders come together to <strong>trade functional digital assets</strong> — from raw blueprints and boilerplates to fully validated micro‑SaaS tools.
+                </p>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                    Whether you're looking to monetize an abandoned side project, find a technical co‑founder, or buy a proven concept to scale — this ecosystem gives you the tools and community to make it happen.
+                </p>
+            </div>
+
+            <h2 class="text-3xl font-bold text-slate-800 dark:text-white text-center">
+                More Than Just a Marketplace — <span class="gradient-text">The @Saas Ecosystem</span>
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400 text-center mt-2 max-w-2xl mx-auto">
+                A complete hub for indie developers to trade, validate, and scale digital assets — without the corporate overhead.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
+                    <div class="text-3xl mb-3">📐</div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">The Idea Marketplace</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Post validated SaaS concepts, feature logic workflows, or pre-configured API routing blueprints. Structured as flat-fee transfers or tiered documentation access.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
+                    <div class="text-3xl mb-3">🤝</div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">P2P Micro-Task Protocol</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">A peer-to-peer directory for digital problems. Post specific engineering bottlenecks and fund the solution directly.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
+                    <div class="text-3xl mb-3">💰</div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Sovereign Ad-Monetization</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Embed your own ad network scripts directly into your project profile URLs — keeping 100% of the ad revenue generated by your traffic.</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
+                    <div class="text-3xl mb-3">🧩</div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Code-Widget Vault</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Production-ready embeddable HTML/CSS/JS components, unique web extension templates, and custom backend boilerplate setups ready for instant integration.</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8 mt-8 text-sm text-slate-600 dark:text-slate-400 bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-900/20">
+                <span><strong class="text-indigo-600 dark:text-indigo-400">0%</strong> listing fees</span>
+                <span><strong class="text-indigo-600 dark:text-indigo-400">5%</strong> take rate on sales</span>
+                <span><strong class="text-indigo-600 dark:text-indigo-400">100%</strong> ad revenue to creators</span>
+                <span><strong class="text-indigo-600 dark:text-indigo-400">Escrow</strong> protected transactions</span>
+            </div>
+        </div>
+        <!-- ============================================ -->
+        <!-- END ABOUT SECTION                           -->
+        <!-- ============================================ -->
+
+    </div>
+
+    <!-- ============================================ -->
+    <!-- FOOTER                                       -->
+    <!-- ============================================ -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="text-xl font-extrabold gradient-text">@Saas</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400">— At Last, a SaaS Marketplace</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-6 text-sm text-slate-600 dark:text-slate-400">
+                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">About</a>
+                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Terms</a>
+                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Privacy</a>
+                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">GitHub</a>
+                <span class="text-xs">© 2026 @Saas</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT                                   -->
+    <!-- ============================================ -->
+    <script>
+        // ---- Tab filtering (works as before) ----
+        (function() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const cards = document.querySelectorAll('.listing-card');
+            const resultSpan = document.getElementById('resultCount');
+
+            function filterCards(category) {
+                let visible = 0;
+                cards.forEach(card => {
+                    const cardCat = card.dataset.category;
+                    if (category === 'all' || cardCat === category) {
+                        card.style.display = 'block';
+                        visible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                resultSpan.textContent = visible + ' listings this week';
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('tab-active'));
+                    this.classList.add('tab-active');
+                    const filter = this.dataset.filter || 'all';
+                    filterCards(filter);
+                });
+            });
+
+            filterCards('all');
+        })();
+
+        // ---- COMING SOON MODAL (for ALL clickable elements) ----
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('comingSoonModal');
+            const closeBtn = document.getElementById('modalCloseBtn');
+
+            // Function to show modal
+            function showComingSoon(e) {
+                e.preventDefault();
+                modal.classList.add('active');
+            }
+
+            // Close modal on button click
+            closeBtn.addEventListener('click', function() {
+                modal.classList.remove('active');
+            });
+
+            // Close modal on background click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+
+            // Select all buttons, links, and interactive elements
+            const clickables = document.querySelectorAll('button, a, .tab-btn, .listing-card button, .modal-close, .px-8.py-3.border, .bg-indigo-600, .hover\\:bg-indigo-700');
+
+            // Attach click handler – but we must exclude the modal close button itself and tabs (they still filter)
+            clickables.forEach(el => {
+                // Skip the modal close button (we already handle it)
+                if (el.id === 'modalCloseBtn') return;
+                // Skip the tab buttons? We'll let them work but also show modal? 
+                // Actually we want all clicks to show modal. But we also want tab filtering to work.
+                // So we'll add a handler that shows modal after a tiny delay, but for tabs we want the filter to happen first.
+                // We'll let the click propagate, but we'll show modal for everything except the modal background.
+                el.addEventListener('click', function(e) {
+                    // If the clicked element is a tab, we already have a filter handler – we'll still show modal.
+                    // To avoid double modal, we can check if it's a tab and still show.
+                    // But we want to show the modal for all clicks. We'll show it after a micro delay so the filter runs first.
+                    setTimeout(() => {
+                        showComingSoon(e);
+                    }, 50);
+                });
+            });
+
+            // Also capture clicks on the "Load More" and other non-button interactive elements
+            const loadMore = document.querySelector('.px-8.py-3.border');
+            if (loadMore) {
+                loadMore.addEventListener('click', function(e) {
+                    setTimeout(() => {
+                        showComingSoon(e);
+                    }, 50);
+                });
+            }
+
+            // Also clicks on the nav buttons and hero buttons
+            const heroButtons = document.querySelectorAll('.bg-indigo-600, .bg-white.dark\\:bg-slate-800');
+            heroButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    setTimeout(() => {
+                        showComingSoon(e);
+                    }, 50);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
