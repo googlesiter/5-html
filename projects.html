@@ -3,795 +3,1415 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@Saas - Buy, Sell & Share SaaS Concepts</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FED-POSTER · Multi-Channel Publishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        * { font-family: 'Inter', sans-serif; }
-        .gradient-text {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #07090f;
+            --bg-surface: #0e111c;
+            --bg-card: #161b2b;
+            --bg-card-hover: #1e2438;
+            --text-primary: #edf0fa;
+            --text-secondary: #8890b0;
+            --text-muted: #6b7280;
+            --accent: #7c5cfc;
+            --accent-2: #5b8def;
+            --gradient-main: linear-gradient(135deg, #7c5cfc, #5b8def, #f472b6);
+            --gradient-gold: linear-gradient(135deg, #f59e0b, #fbbf24);
+            --gradient-red: linear-gradient(135deg, #ef4444, #dc2626);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background: var(--gradient-main);
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(124, 92, 252, 0.35);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 14px 48px rgba(124, 92, 252, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: #0a0c14;
+            box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+        }
+        .btn-gold:hover {
+            box-shadow: 0 14px 48px rgba(245, 158, 11, 0.45);
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 0.85rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 14px 0;
+            z-index: 1000;
+            background: rgba(7, 9, 15, 0.85);
+            backdrop-filter: blur(22px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 1.5rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .logo i {
+            -webkit-text-fill-color: var(--accent);
+            color: var(--accent);
+        }
+        .logo .badge {
+            font-size: 0.5rem;
+            background: var(--gradient-red);
+            -webkit-text-fill-color: #fff;
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .hero {
+            padding: 130px 0 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            left: -20%;
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(circle, rgba(124, 92, 252, 0.06), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .tag {
+            display: inline-block;
+            background: rgba(124, 92, 252, 0.12);
+            border: 1px solid rgba(124, 92, 252, 0.15);
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.8rem, 7vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 6px;
+        }
+        .hero h1 .accent {
+            background: var(--gradient-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .glow-white {
-            color: white;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
+
+        .hero .byline {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
         }
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.25);
-        }
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark .glass-nav {
-            background: rgba(15, 23, 42, 0.8);
-        }
-        .tab-active {
-            background-color: #6366f1 !important;
-            color: white !important;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        .hero .byline span {
+            color: var(--accent);
+            font-weight: 700;
         }
 
-        /* Coming Soon Modal */
-        .modal-overlay {
+        .hero .tagline {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 12px auto 28px;
+            line-height: 1.7;
+        }
+
+        .hero .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+        }
+
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .hero .stats .num {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero .stats .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .section-platforms {
+            padding: 50px 0 70px;
+            background: var(--bg-surface);
+        }
+        .section-platforms .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .platform-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .platform-item:hover {
+            background: rgba(124, 92, 252, 0.06);
+            border-color: rgba(124, 92, 252, 0.1);
+            color: var(--text-primary);
+        }
+        .platform-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+        .platform-item .status {
+            font-size: 0.5rem;
+            font-weight: 600;
+            padding: 1px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .status-live {
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .status-soon {
+            background: rgba(251, 191, 36, 0.08);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+        .status-zapier {
+            background: rgba(124, 92, 252, 0.08);
+            color: var(--accent);
+            border: 1px solid rgba(124, 92, 252, 0.1);
+        }
+        .status-limited {
+            background: rgba(239, 68, 68, 0.08);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        .platforms-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .platforms-footer .zapier-note {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .section-features {
+            padding: 60px 0;
+            background: var(--bg-body);
+            overflow: hidden;
+        }
+        .section-features .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 24px;
+            width: max-content;
+            animation: scroll 28s linear infinite;
+        }
+        .carousel-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .feature-card {
+            flex: 0 0 340px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .feature-card .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 14px;
+            background: rgba(124, 92, 252, 0.1);
+            color: var(--accent);
+        }
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            flex-grow: 1;
+        }
+        .feature-card .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        .feature-card .chips span {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 2px 10px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .feature-card .btn-link {
+            margin-top: auto;
+            align-self: flex-start;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .feature-card .btn-link:hover {
+            background: rgba(124, 92, 252, 0.12);
+            border-color: rgba(124, 92, 252, 0.2);
+            color: #fff;
+            gap: 10px;
+        }
+
+        .section-pricing {
+            padding: 60px 0 70px;
+            background: var(--bg-surface);
+        }
+        .section-pricing .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            text-align: center;
+        }
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.08);
+            background: var(--bg-card-hover);
+        }
+        .pricing-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(124, 92, 252, 0.12);
+        }
+        .pricing-card .ribbon {
+            position: absolute;
+            top: 10px;
+            right: -26px;
+            transform: rotate(45deg);
+            background: var(--gradient-red);
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.55rem;
+            padding: 3px 36px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pricing-card .ribbon.gold {
+            background: var(--gradient-gold);
+            color: #0a0c14;
+        }
+        .pricing-card .ribbon.purple {
+            background: var(--gradient-main);
+        }
+
+        .pricing-card .emoji {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+        .pricing-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .pricing-card .price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .pricing-card .price .currency {
+            font-size: 1.1rem;
+        }
+        .pricing-card .price .period {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .pricing-card .divider {
+            width: 32px;
+            height: 2px;
+            background: var(--accent);
+            margin: 4px auto 10px;
+            border-radius: 2px;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px;
+            text-align: left;
+            flex-grow: 1;
+            font-size: 0.8rem;
+        }
+        .pricing-card ul li {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: var(--text-secondary);
+        }
+        .pricing-card ul li:last-child {
+            border-bottom: none;
+        }
+        .pricing-card ul li i {
+            color: var(--accent);
+            min-width: 14px;
+            text-align: center;
+            font-size: 0.7rem;
+        }
+
+        .pricing-card .btn-pricing {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 60px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: block;
+            font-size: 0.85rem;
+        }
+        .pricing-card .btn-pricing:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(124, 92, 252, 0.3);
+        }
+        .pricing-card .btn-pricing.gold {
+            background: var(--gradient-gold);
+            color: #0a0c14;
+        }
+
+        .pricing-card .footnote {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .section-benefits {
+            padding: 60px 0;
+            background: var(--bg-body);
+        }
+        .section-benefits .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .benefit {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 22px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .benefit:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.08);
+            background: var(--bg-card-hover);
+        }
+        .benefit .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+        .benefit h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .benefit p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .section-cta {
+            padding: 60px 0 40px;
+            background: var(--bg-surface);
+            text-align: center;
+        }
+
+        .cta-box {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 48px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-box h2 {
+            font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .cta-box p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+        .cta-box .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+        .cta-box .fine {
+            margin-top: 16px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* ── NEW KO-FI WIDGET SECTION ── */
+        .section-ko-fi {
+            padding: 40px 0 60px;
+            background: var(--bg-body);
+        }
+        .section-ko-fi .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section-ko-fi .header h2 {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 800;
+        }
+        .section-ko-fi .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .ko-fi-wrapper {
+            position: relative;
+            width: 680px;
+            max-width: 100%;
+            height: 850px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+        .ko-fi-wrapper:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(124, 92, 252, 0.15);
+        }
+        .ko-fi-wrapper iframe {
+            border: none;
+            width: 600px;
+            height: 712px;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: scale(1.12);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+        .ko-fi-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            box-shadow:
+                inset 120px 0 0 0 var(--bg-body),
+                inset -150px 0 0 0 var(--bg-body),
+                inset 0 -120px 0 0 var(--bg-body);
+            border-radius: 20px;
+        }
+
+        /* ── Modal (removed Ko-fi modal, kept for other use) ── */
+        .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
-            z-index: 999;
-            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
             justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
         }
-        .modal-overlay.active {
+        .modal.is-open {
             display: flex;
         }
+
         .modal-box {
-            background: white;
-            border-radius: 2rem;
-            padding: 2.5rem 3rem;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-            animation: popIn 0.3s ease;
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
         }
-        .dark .modal-box {
-            background: #1e293b;
-            color: #f1f5f9;
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .modal-close {
-            margin-top: 1.5rem;
-            background: #6366f1;
-            color: white;
+        .modal-box .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
             border: none;
-            padding: 0.6rem 2rem;
-            border-radius: 9999px;
-            font-weight: 600;
+            font-size: 28px;
+            color: #333;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: var(--transition);
+            z-index: 10;
         }
-        .modal-close:hover {
-            background: #4f46e5;
+        .modal-box .close:hover {
+            transform: rotate(90deg);
+            color: #000;
+        }
+        .modal-box iframe {
+            border: none;
+            width: 100%;
+            padding: 4px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        footer {
+            padding: 28px 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            background: var(--bg-body);
+        }
+        footer .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        footer .copy {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        footer .copy strong {
+            color: var(--text-primary);
+        }
+        footer .socials {
+            display: flex;
+            gap: 10px;
+        }
+        footer .socials a {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            transition: var(--transition);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        footer .socials a:hover {
+            background: rgba(124, 92, 252, 0.1);
+            color: #fff;
+        }
+
+        @media (max-width: 1024px) {
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-body);
+                padding: 20px;
+                gap: 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            }
+            .nav-links.is-open {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            .hero .stats {
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+            .hero .stats .num {
+                font-size: 1.3rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 380px;
+            }
+
+            .platform-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                padding: 14px 12px;
+            }
+            .platform-item {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+            }
+            .feature-card {
+                flex: 0 0 260px;
+                padding: 20px 18px;
+                min-height: 240px;
+            }
+            .cta-box {
+                padding: 28px 20px;
+            }
+            footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .ko-fi-wrapper {
+                width: 100%;
+                height: 650px;
+            }
+            .ko-fi-wrapper iframe {
+                transform: scale(0.85);
+                width: 100%;
+                height: 700px;
+            }
+            .ko-fi-mask {
+                box-shadow:
+                    inset 60px 0 0 0 var(--bg-body),
+                    inset -80px 0 0 0 var(--bg-body),
+                    inset 0 -80px 0 0 var(--bg-body);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero .tagline {
+                font-size: 1rem;
+            }
+            .platform-grid {
+                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+                gap: 6px;
+                padding: 10px 8px;
+            }
+            .platform-item {
+                font-size: 0.65rem;
+                padding: 4px 8px;
+                gap: 4px;
+            }
+            .platform-item i {
+                font-size: 0.75rem;
+                width: 14px;
+            }
+            .platform-item .status {
+                font-size: 0.4rem;
+                padding: 1px 4px;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .logo .badge {
+                font-size: 0.4rem;
+                padding: 1px 6px;
+            }
+            .feature-card {
+                flex: 0 0 230px;
+                padding: 16px 14px;
+                min-height: 200px;
+            }
+            .feature-card h3 {
+                font-size: 1rem;
+            }
+            .pricing-card {
+                padding: 18px 14px;
+            }
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+            .ko-fi-wrapper {
+                height: 500px;
+            }
+            .ko-fi-wrapper iframe {
+                transform: scale(0.65);
+                height: 680px;
+                width: 100%;
+            }
+            .ko-fi-mask {
+                box-shadow:
+                    inset 30px 0 0 0 var(--bg-body),
+                    inset -40px 0 0 0 var(--bg-body),
+                    inset 0 -50px 0 0 var(--bg-body);
+            }
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 antialiased">
+<body>
 
-    <!-- ============================================ -->
-    <!-- COMING SOON MODAL                            -->
-    <!-- ============================================ -->
-    <div id="comingSoonModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="text-6xl mb-4">🚀</div>
-            <h3 class="text-2xl font-bold text-slate-800 dark:text-white">Coming Soon</h3>
-            <p class="text-slate-600 dark:text-slate-300 mt-2 text-sm">
-                This feature is under development. We'll notify you when it's ready!
-            </p>
-            <button class="modal-close" id="modalCloseBtn">Got it</button>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- NAVIGATION                                   -->
-    <!-- ============================================ -->
-    <nav class="glass-nav fixed w-full z-50 px-6 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl font-extrabold gradient-text">@Saas</span>
-                <span class="text-xs bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full font-semibold">BETA</span>
-            </div>
-            <div class="hidden md:flex flex-1 max-w-xl mx-8">
-                <div class="relative w-full">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" placeholder="Search concepts, boilerplates, micro-SaaS..."
-                           class="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800/50 border-0 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 outline-none transition" />
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <button class="hidden sm:flex text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition px-4 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
-                    <i class="fas fa-plus mr-2"></i> List Idea
-                </button>
-                <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">
-                    <i class="fas fa-rocket mr-2"></i> Get Started
-                </button>
-                <button class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-600 transition">
-                    <i class="fas fa-user text-slate-700 dark:text-slate-300"></i>
-                </button>
-            </div>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-bolt"></i> FED-OS
+                <span class="badge">BETA</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li>
+                    <a href="https://ko-fi.com/fedpromptly" target="_blank" class="btn btn-gold btn-sm">
+                        <i class="fas fa-heart"></i> Subscribe
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" class="btn btn-outline btn-sm">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                </li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- ============================================ -->
-    <!-- HERO SECTION                                 -->
-    <!-- ============================================ -->
-    <section class="pt-28 pb-16 px-6 text-center">
-        <div class="max-w-4xl mx-auto">
-            <div class="inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <i class="fas fa-sparkles text-xs"></i>
-                At Last — a place for SaaS builders
-            </div>
-            <h1 class="font-extrabold leading-tight">
-                <span class="block text-5xl md:text-7xl">
-                    <span class="glow-white">Buy, Sell & Share</span>
-                    <span class="gradient-text">SaaS Concepts</span>
-                </span>
-                <span class="block text-2xl md:text-3xl font-semibold text-slate-600 dark:text-slate-400 mt-2">
-                    Without the Corporate Overhead
-                </span>
-            </h1>
-            <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl mt-4 max-w-2xl mx-auto">
-                From raw blueprints to functional micro-SaaS — find your next project or
-                monetize your abandoned ideas.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4 mt-8">
-                <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-xl font-semibold shadow-xl shadow-indigo-600/30 transition flex items-center gap-2">
-                    <i class="fas fa-store"></i> Explore Marketplace
-                </button>
-                <button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 px-8 py-3.5 rounded-xl font-semibold text-slate-700 dark:text-slate-300 transition flex items-center gap-2">
-                    <i class="fas fa-code"></i> View Open Source
-                </button>
-            </div>
-            <div class="flex flex-wrap justify-center gap-6 mt-10 text-sm text-slate-500 dark:text-slate-400">
-                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> No listing fees</span>
-                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> 5% take rate</span>
-                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> Verified repos</span>
-                <span><i class="fas fa-check-circle text-emerald-500 mr-1.5"></i> Escrow protected</span>
-            </div>
-        </div>
-    </section>
+    <div id="landingContent">
 
-    <!-- ============================================ -->
-    <!-- CATEGORY FILTER BAR                          -->
-    <!-- ============================================ -->
-    <div class="max-w-7xl mx-auto px-6 -mt-2 mb-8">
-        <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-4" id="tabContainer">
-            <button class="tab-btn tab-active px-5 py-2 bg-indigo-600 text-white rounded-full text-sm font-semibold shadow-md shadow-indigo-600/20" data-filter="all">🔥 All</button>
-            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="blueprint">📐 Blueprints</button>
-            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="boilerplate">⚡ Boilerplates</button>
-            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="micro_saas">💰 Micro‑SaaS</button>
-            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="collab">🤝 Collab</button>
-            <button class="tab-btn px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition" data-filter="dev_tooling">🛠️ Dev Tooling</button>
-            <button class="px-5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-                <i class="fas fa-plus text-xs mr-1"></i> More
-            </button>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- TRENDING CONCEPTS (6 totally novel ideas)    -->
-    <!-- ============================================ -->
-    <div class="max-w-7xl mx-auto px-6 pb-20">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold text-slate-800 dark:text-white">
-                <i class="fas fa-fire text-orange-500 mr-2"></i> Trending Concepts
-            </h2>
-            <span class="text-sm text-slate-500 dark:text-slate-400" id="resultCount">6 listings this week</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="listingsGrid">
-
-            <!-- 1: Attention Debt Manager -->
-            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="blueprint">
-                <div class="flex items-start justify-between mb-3">
-                    <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Attention Debt</span>
-                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$79</span>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Attention Debt Manager</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Tracks every pending reply, unread message, and task you've "owed" to others. Schedules focused "attention repayment" blocks and gamifies clearing your inbox debt.</p>
-                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                    <span><i class="far fa-user mr-1"></i> 47 saves</span>
-                    <span><i class="far fa-comment mr-1"></i> 12 comments</span>
-                </div>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">AD</div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@attentiondev</span>
-                    <span class="text-xs text-slate-400 ml-auto">2 days ago</span>
-                </div>
-                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-            </div>
-
-            <!-- 2: Micro-Cloud Orchestrator -->
-            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="boilerplate">
-                <div class="flex items-start justify-between mb-3">
-                    <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full font-semibold">⚡ Micro‑Cloud</span>
-                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$199</span>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Micro‑Cloud Orchestrator</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A personal cloud broker that spreads your files across Backblaze, Wasabi, and Storj – with automatic redundancy, erasure coding, and a single unified mount point.</p>
-                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                    <span><i class="fas fa-code mr-1"></i> 89 stars</span>
-                    <span><i class="far fa-comment mr-1"></i> 18 comments</span>
-                </div>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs font-bold text-emerald-600 dark:text-emerald-300">MC</div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@microcloud</span>
-                    <span class="text-xs text-slate-400 ml-auto">4 days ago</span>
-                </div>
-                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-            </div>
-
-            <!-- 3: Digital Hoarders Organizer -->
-            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover relative overflow-hidden" data-category="micro_saas">
-                <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl">🔥 NEW</div>
-                <div class="flex items-start justify-between mb-3">
-                    <span class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">💰 Hoarder</span>
-                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$149</span>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">SaaS for Digital Hoarders</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Uses local embeddings to auto‑organise your bookmarks, notes, and screenshots into a semantic knowledge graph – so you can finally find that one article from 3 years ago.</p>
-                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                    <span><i class="fas fa-download mr-1"></i> 34 purchases</span>
-                    <span><i class="far fa-comment mr-1"></i> 9 comments</span>
-                </div>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-xs font-bold text-rose-600 dark:text-rose-300">DH</div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@digitalhoarder</span>
-                    <span class="text-xs text-slate-400 ml-auto">1 day ago</span>
-                </div>
-                <button class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">Buy Now →</button>
-            </div>
-
-            <!-- 4: Ethical Data Broker -->
-            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="collab">
-                <div class="flex items-start justify-between mb-3">
-                    <span class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full font-semibold">🤝 Data Ethics</span>
-                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Free</span>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Ethical Data Broker</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Let users sell their anonymised browsing data to researchers – full transparency, opt‑out at any time, and you get paid for your digital footprint.</p>
-                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                    <span><i class="fas fa-users mr-1"></i> 6/12 spots filled</span>
-                    <span><i class="far fa-comment mr-1"></i> 24 comments</span>
-                </div>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-xs font-bold text-cyan-600 dark:text-cyan-300">EB</div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@ethicbroker</span>
-                    <span class="text-xs text-slate-400 ml-auto">5 days ago</span>
-                </div>
-                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">Join Project →</button>
-            </div>
-
-            <!-- 5: Event-Driven CI/CD for Non-Coders -->
-            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="dev_tooling">
-                <div class="flex items-start justify-between mb-3">
-                    <span class="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-full font-semibold">🛠️ Event CI/CD</span>
-                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$69</span>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Event‑Driven CI/CD for Non‑Coders</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Visual workflow builder that triggers deployments based on business events (e.g., a new Stripe subscription, a Slack message, or a calendar invite). No YAML required.</p>
-                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                    <span><i class="fas fa-download mr-1"></i> 27 purchases</span>
-                    <span><i class="far fa-comment mr-1"></i> 11 comments</span>
-                </div>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">EC</div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@eventcd</span>
-                    <span class="text-xs text-slate-400 ml-auto">3 days ago</span>
-                </div>
-                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-            </div>
-
-            <!-- 6: AI-Driven Interview Coach -->
-            <div class="listing-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover" data-category="blueprint">
-                <div class="flex items-start justify-between mb-3">
-                    <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Interview AI</span>
-                    <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$99</span>
-                </div>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">AI‑Driven Interview Coach</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Simulates interviews with AI personas that adapt to your industry – gives real‑time feedback on tone, filler words, and body language (via webcam).</p>
-                <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                    <span><i class="far fa-user mr-1"></i> 56 saves</span>
-                    <span><i class="far fa-comment mr-1"></i> 15 comments</span>
-                </div>
-                <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <div class="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300">IC</div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@interviewcoach</span>
-                    <span class="text-xs text-slate-400 ml-auto">2 days ago</span>
-                </div>
-                <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-            </div>
-
-        </div>
-
-        <!-- Load More -->
-        <div class="text-center mt-10">
-            <button class="px-8 py-3 border border-slate-300 dark:border-slate-700 hover:border-indigo-400 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 transition">
-                <i class="fas fa-chevron-down mr-2"></i> Load More Concepts
-            </button>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- POPULAR CONCEPTS (6 more novel ideas)        -->
-        <!-- ============================================ -->
-        <div class="mt-16">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="text-2xl">⭐</span>
-                <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-white">
-                    Popular Concepts
-                </h2>
-                <span class="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-2.5 py-0.5 rounded-full font-semibold">Top rated</span>
-            </div>
-            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
-                The most bookmarked and discussed SaaS ideas on the platform.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                <!-- 7: Reverse Job Board -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Reverse Job</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$89</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Reverse Job Board</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Companies post their culture, challenges, and values. Candidates "apply" by submitting solutions to a sample task – not a resume. Hiring becomes a showcase of skill.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="far fa-bookmark mr-1"></i> 92 saves</span>
-                        <span><i class="far fa-comment mr-1"></i> 29 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">RJ</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@reversejobs</span>
-                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.9</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 8: Digital Twin for Finances -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full font-semibold">⚡ Finance Twin</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$149</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Digital Twin for Personal Finances</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Creates a virtual replica of your spending habits and simulates "what if" scenarios – like taking a sabbatical, buying a home, or investing in crypto – to show the long‑term impact.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="far fa-bookmark mr-1"></i> 67 saves</span>
-                        <span><i class="far fa-comment mr-1"></i> 21 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs font-bold text-emerald-600 dark:text-emerald-300">DT</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@digitaltwin</span>
-                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.8</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 9: Collaborative API Playground -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl">⭐ EDITOR'S PICK</div>
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">💰 API Playground</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$249</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Collaborative API Playground</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A shared workspace where teams design, mock, and test APIs together – with live docs, versioned examples, and a built‑in Postman‑like client.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-download mr-1"></i> 48 purchases</span>
-                        <span><i class="far fa-comment mr-1"></i> 16 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-xs font-bold text-rose-600 dark:text-rose-300">AP</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@apiplayground</span>
-                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.9</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">Buy Now →</button>
-                </div>
-
-                <!-- 10: Dark Pattern Detector -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full font-semibold">🤝 Dark Patterns</span>
-                        <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Free</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Dark Pattern Detector</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A browser extension that scans websites for manipulative UI patterns (hidden costs, forced urgency, misdirection) and alerts you with a simple warning badge.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-users mr-1"></i> 11/15 spots filled</span>
-                        <span><i class="far fa-comment mr-1"></i> 34 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-xs font-bold text-cyan-600 dark:text-cyan-300">DP</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@darkpattern</span>
-                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.7</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">Join Project →</button>
-                </div>
-
-                <!-- 11: Water Cooler Chat Bot -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 px-3 py-1 rounded-full font-semibold">🛠️ Water Cooler</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$29</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Water Cooler Chat Bot</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A Slack/Discord bot that facilitates random, topic‑based pairing for remote teams – recreates the office water cooler banter, with icebreaker prompts.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-download mr-1"></i> 73 purchases</span>
-                        <span><i class="far fa-comment mr-1"></i> 19 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">WC</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@watercooler</span>
-                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.8</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 12: Low-Code Data Pipeline Builder -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full font-semibold">📐 Data Pipeline</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$119</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Low‑Code Data Pipeline Builder</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Drag‑and‑drop ETL pipelines that output to SQL, CSV, or APIs – with built‑in monitoring, error handling, and scheduling. No Python required.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="far fa-bookmark mr-1"></i> 38 saves</span>
-                        <span><i class="far fa-comment mr-1"></i> 14 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300">DP</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@datapipeline</span>
-                        <span class="text-xs text-slate-400 ml-auto">⭐ 4.6</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-            </div>
-        </div>
-        <!-- ============================================ -->
-        <!-- END POPULAR CONCEPTS SECTION                -->
-        <!-- ============================================ -->
-
-        <!-- ============================================ -->
-        <!-- FRONTEND-FIRST CONCEPTS (6 more)            -->
-        <!-- ============================================ -->
-        <div class="mt-16">
-            <div class="flex items-center gap-3 mb-2">
-                <span class="text-2xl">🎨</span>
-                <h2 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-white">
-                    Frontend-First Concepts
-                </h2>
-                <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-2.5 py-0.5 rounded-full font-semibold">No backend required</span>
-            </div>
-            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
-                Design‑heavy, UI‑first, and no‑code ideas where the value is in the frontend experience.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                <!-- 13: CSS Art Generator -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🎨 CSS Art</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$59</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">CSS Art Generator</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Turn simple sketches into CSS‑only art using neural style transfer – runs entirely in your browser. Export as pure CSS or SVG.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="far fa-bookmark mr-1"></i> 44 saves</span>
-                        <span><i class="far fa-comment mr-1"></i> 8 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-pink-100 dark:bg-pink-900/40 flex items-center justify-center text-xs font-bold text-pink-600 dark:text-pink-300">CA</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@cssart</span>
-                        <span class="text-xs text-slate-400 ml-auto">1 day ago</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 14: Personal History Timeline -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">✨ Timeline</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$39</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Interactive Personal History Timeline</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Map out your life events with photos, videos, and text. Create a private, shareable web page that tells your story – like a living biography.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-download mr-1"></i> 22 purchases</span>
-                        <span><i class="far fa-comment mr-1"></i> 6 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-xs font-bold text-indigo-600 dark:text-indigo-300">HT</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@historytimeline</span>
-                        <span class="text-xs text-slate-400 ml-auto">3 days ago</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 15: Variable Font Playground -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl">🚀 POPULAR</div>
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🧩 Typography</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$49</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Variable Font Playground</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Real‑time tool to tweak every axis of variable fonts – see the effect instantly on sample text. Export the exact CSS configuration for your project.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-download mr-1"></i> 86 purchases</span>
-                        <span><i class="far fa-comment mr-1"></i> 12 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-xs font-bold text-rose-600 dark:text-rose-300">VF</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@varfont</span>
-                        <span class="text-xs text-slate-400 ml-auto">2 days ago</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25">Buy Now →</button>
-                </div>
-
-                <!-- 16: Voice-Activated Portfolio Builder -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🎙️ Voice</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$69</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Voice‑Activated Portfolio Builder</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">Speak about your work and skills – the app transcribes, summarises, and builds a beautiful portfolio website with sections, all from your voice.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="far fa-bookmark mr-1"></i> 31 saves</span>
-                        <span><i class="far fa-comment mr-1"></i> 5 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center text-xs font-bold text-violet-600 dark:text-violet-300">VB</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@voicebuild</span>
-                        <span class="text-xs text-slate-400 ml-auto">5 days ago</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 17: Emoji Mood Tracker -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">😊 Mood</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$19</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Emoji Mood Tracker</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A daily journal that uses emoji combos to capture your mood. See a beautiful heatmap calendar that reveals your emotional patterns over time.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-download mr-1"></i> 54 purchases</span>
-                        <span><i class="far fa-comment mr-1"></i> 10 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-xs font-bold text-cyan-600 dark:text-cyan-300">EM</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@emojimood</span>
-                        <span class="text-xs text-slate-400 ml-auto">1 week ago</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-                <!-- 18: Minimalist Code Snippet Organizer -->
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 card-hover">
-                    <div class="flex items-start justify-between mb-3">
-                        <span class="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full font-semibold">🧩 Snippets</span>
-                        <span class="text-sm font-bold text-emerald-600 dark:text-emerald-400">$29</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Minimalist Code Snippet Organizer</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5 line-clamp-2">A clean, local‑first repository for your code snippets. Tag, search, and copy instantly – no cloud, no bloat, just pure utility.</p>
-                    <div class="flex items-center gap-3 mt-3 text-xs text-slate-500 dark:text-slate-400">
-                        <span><i class="fas fa-download mr-1"></i> 41 purchases</span>
-                        <span><i class="far fa-comment mr-1"></i> 7 comments</span>
-                    </div>
-                    <div class="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <div class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-xs font-bold text-emerald-600 dark:text-emerald-300">SO</div>
-                        <span class="text-xs font-medium text-slate-700 dark:text-slate-300">@snippetorg</span>
-                        <span class="text-xs text-slate-400 ml-auto">2 weeks ago</span>
-                    </div>
-                    <button class="w-full mt-3 bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 py-2 rounded-xl text-sm font-semibold transition">View Details →</button>
-                </div>
-
-            </div>
-        </div>
-        <!-- ============================================ -->
-        <!-- END FRONTEND-FIRST SECTION                  -->
-        <!-- ============================================ -->
-
-        <!-- ============================================ -->
-        <!-- ABOUT @SAAS - Platform Features              -->
-        <!-- ============================================ -->
-        <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-800">
-            <div class="max-w-3xl mx-auto text-center mb-6">
-                <p class="text-lg md:text-xl font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
-                    <span class="gradient-text font-bold">@Saas</span> is the first dedicated hub where indie developers, ideators, and builders come together to <strong>trade functional digital assets</strong> — from raw blueprints and boilerplates to fully validated micro‑SaaS tools.
+        <section class="hero" id="hero">
+            <div class="container">
+                <div class="tag"><i class="fas fa-rocket"></i> Beta · Early Access</div>
+                <h1>FED<span class="accent">-POSTER</span></h1>
+                <p class="byline">by <span>fedpromptly.com</span></p>
+                <p class="tagline">
+                    <strong>Publish and adapt content</strong> across your connected channels from one workspace.<br />
+                    Manage direct integrations and Zapier workflows, review platform-specific versions, schedule campaigns, and track delivery status.
                 </p>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">
-                    Whether you're looking to monetize an abandoned side project, find a technical co‑founder, or buy a proven concept to scale — this ecosystem gives you the tools and community to make it happen.
-                </p>
+                <div class="actions">
+                    <a href="#ko-fi-section" class="btn btn-gold"><i class="fas fa-rocket"></i> Join Beta</a>
+                    <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> View on GitHub</a>
+                </div>
+                <div class="stats">
+                    <div><div class="num">20+</div><div class="label">Direct Integrations</div></div>
+                    <div><div class="num">450+</div><div class="label">Via Zapier</div></div>
+                    <div><div class="num">100%</div><div class="label">Open Source Core</div></div>
+                </div>
             </div>
+        </section>
 
-            <h2 class="text-3xl font-bold text-slate-800 dark:text-white text-center">
-                More Than Just a Marketplace — <span class="gradient-text">The @Saas Ecosystem</span>
-            </h2>
-            <p class="text-slate-600 dark:text-slate-400 text-center mt-2 max-w-2xl mx-auto">
-                A complete hub for indie developers to trade, validate, and scale digital assets — without the corporate overhead.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
-                    <div class="text-3xl mb-3">📐</div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">The Idea Marketplace</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Post validated SaaS concepts, feature logic workflows, or pre-configured API routing blueprints. Structured as flat-fee transfers or tiered documentation access.</p>
+        <section class="section-platforms" id="platforms">
+            <div class="container">
+                <div class="header">
+                    <h2 style="font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800;">Supported Integrations</h2>
+                    <p style="color: var(--text-secondary); font-size: 1rem;">Direct integrations available now. Additional platforms via Zapier.</p>
                 </div>
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
-                    <div class="text-3xl mb-3">🤝</div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">P2P Micro-Task Protocol</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">A peer-to-peer directory for digital problems. Post specific engineering bottlenecks and fund the solution directly.</p>
+                <div class="platform-grid">
+                    <div class="platform-item"><i class="fab fa-facebook"></i> Facebook <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-youtube"></i> YouTube <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-instagram"></i> Instagram <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-tiktok"></i> TikTok <span class="status status-limited">Limited</span></div>
+                    <div class="platform-item"><i class="fab fa-twitter"></i> X <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-linkedin"></i> LinkedIn <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-reddit"></i> Reddit <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-discord"></i> Discord <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-telegram"></i> Telegram <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-medium"></i> Medium <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-wordpress"></i> WordPress <span class="status status-live">Live</span></div>
+                    <div class="platform-item"><i class="fab fa-github"></i> GitHub <span class="status status-limited">Limited</span></div>
+                    <div class="platform-item"><i class="fab fa-gitlab"></i> GitLab <span class="status status-limited">Limited</span></div>
+                    <div class="platform-item"><i class="fab fa-twitch"></i> Twitch <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fab fa-tumblr"></i> Tumblr <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fab fa-quora"></i> Quora <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fab fa-weixin"></i> WeChat <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fab fa-snapchat"></i> Snapchat <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fab fa-pinterest"></i> Pinterest <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fab fa-vk"></i> VK <span class="status status-soon">Soon</span></div>
+                    <div class="platform-item"><i class="fas fa-plug"></i> 450+ via Zapier <span class="status status-zapier">Zapier</span></div>
                 </div>
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
-                    <div class="text-3xl mb-3">💰</div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Sovereign Ad-Monetization</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Embed your own ad network scripts directly into your project profile URLs — keeping 100% of the ad revenue generated by your traffic.</p>
-                </div>
-                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 card-hover">
-                    <div class="text-3xl mb-3">🧩</div>
-                    <h3 class="text-lg font-bold text-slate-800 dark:text-white">Code-Widget Vault</h3>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Production-ready embeddable HTML/CSS/JS components, unique web extension templates, and custom backend boilerplate setups ready for instant integration.</p>
+                <div class="platforms-footer">
+                    <span style="color: var(--text-secondary);">Direct integrations use official APIs where available. Platform availability varies by account type and region.</span>
+                    <span class="zapier-note">⚡ Zapier account required for the 450+ extension platforms. Each Zapier automation may consume one or more tasks per post.</span>
                 </div>
             </div>
-            <div class="flex flex-wrap justify-center gap-8 mt-8 text-sm text-slate-600 dark:text-slate-400 bg-indigo-50 dark:bg-indigo-900/10 rounded-2xl p-6 border border-indigo-100 dark:border-indigo-900/20">
-                <span><strong class="text-indigo-600 dark:text-indigo-400">0%</strong> listing fees</span>
-                <span><strong class="text-indigo-600 dark:text-indigo-400">5%</strong> take rate on sales</span>
-                <span><strong class="text-indigo-600 dark:text-indigo-400">100%</strong> ad revenue to creators</span>
-                <span><strong class="text-indigo-600 dark:text-indigo-400">Escrow</strong> protected transactions</span>
+        </section>
+
+        <section class="section-features" id="features">
+            <div class="container">
+                <div class="header">
+                    <h2 style="font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800;">How It Works</h2>
+                    <p style="color: var(--text-secondary); font-size: 1rem;">A practical workflow for multi-channel publishing.</p>
+                </div>
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="carouselTrack"></div>
+                </div>
             </div>
-        </div>
-        <!-- ============================================ -->
-        <!-- END ABOUT SECTION                           -->
-        <!-- ============================================ -->
+        </section>
+
+        <section class="section-pricing" id="pricing">
+            <div class="container">
+                <div class="header">
+                    <h2 style="font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800;">Simple <span style="color: var(--accent);">Pricing</span></h2>
+                    <p style="color: var(--text-secondary); font-size: 1rem;">14-day free trial. No credit card required.</p>
+                </div>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="ribbon">Beta</div>
+                        <div class="emoji">🚀</div>
+                        <h4>Starter</h4>
+                        <div class="price"><span class="currency">$</span>5<span class="period">/mo</span></div>
+                        <div class="divider"></div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Up to 3 connected profiles</li>
+                            <li><i class="fas fa-check"></i> 30 scheduled deliveries/mo</li>
+                            <li><i class="fas fa-check"></i> 20 direct integrations</li>
+                            <li><i class="fas fa-check"></i> 450+ via Zapier</li>
+                            <li><i class="fas fa-check"></i> Basic analytics</li>
+                            <li><i class="fas fa-check"></i> Email support</li>
+                        </ul>
+                        <a href="#ko-fi-section" class="btn-pricing">Join Beta</a>
+                        <div class="footnote">One delivery = one post to one platform</div>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="ribbon gold">Popular</div>
+                        <div class="emoji">📈</div>
+                        <h4>Growth</h4>
+                        <div class="price"><span class="currency">$</span>19<span class="period">/mo</span></div>
+                        <div class="divider"></div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Up to 10 connected profiles</li>
+                            <li><i class="fas fa-check"></i> 200 scheduled deliveries/mo</li>
+                            <li><i class="fas fa-check"></i> 20 direct integrations</li>
+                            <li><i class="fas fa-check"></i> 450+ via Zapier</li>
+                            <li><i class="fas fa-check"></i> Advanced analytics</li>
+                            <li><i class="fas fa-check"></i> Priority support</li>
+                        </ul>
+                        <a href="#ko-fi-section" class="btn-pricing gold">Join Beta</a>
+                        <div class="footnote">One delivery = one post to one platform</div>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="ribbon purple">Best Value</div>
+                        <div class="emoji">⚡</div>
+                        <h4>Pro</h4>
+                        <div class="price"><span class="currency">$</span>50<span class="period">/mo</span></div>
+                        <div class="divider"></div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Unlimited connected profiles</li>
+                            <li><i class="fas fa-check"></i> 1,000 scheduled deliveries/mo</li>
+                            <li><i class="fas fa-check"></i> 20 direct integrations</li>
+                            <li><i class="fas fa-check"></i> 450+ via Zapier</li>
+                            <li><i class="fas fa-check"></i> Full analytics &amp; reporting</li>
+                            <li><i class="fas fa-check"></i> Dedicated support</li>
+                            <li><i class="fas fa-check"></i> Team collaboration (5 users)</li>
+                        </ul>
+                        <a href="#ko-fi-section" class="btn-pricing gold">Join Beta</a>
+                        <div class="footnote">One delivery = one post to one platform · Fair-use policy applies</div>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="ribbon">Enterprise</div>
+                        <div class="emoji">🏷️</div>
+                        <h4>Agency</h4>
+                        <div class="price"><span class="currency">$</span>250<span class="period">/mo</span></div>
+                        <div class="divider"></div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Everything in Pro</li>
+                            <li><i class="fas fa-check"></i> White-label branding</li>
+                            <li><i class="fas fa-check"></i> Unlimited client accounts</li>
+                            <li><i class="fas fa-check"></i> Self-hosted option available</li>
+                            <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                            <li><i class="fas fa-check"></i> SOC2 readiness program</li>
+                        </ul>
+                        <a href="#ko-fi-section" class="btn-pricing">Contact Sales</a>
+                        <div class="footnote">Self-hosted and dedicated support quoted separately</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-benefits" id="benefits">
+            <div class="container">
+                <div class="header">
+                    <h2 style="font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800;">Built for <span style="color: var(--accent);">Creators</span></h2>
+                    <p style="color: var(--text-secondary); font-size: 1rem;">Practical features that solve real cross-posting problems.</p>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit">
+                        <div class="icon"><i class="fas fa-server"></i></div>
+                        <h3>Flexible Architecture</h3>
+                        <p>Browser-based client with optional Supabase Edge Functions for OAuth token exchange. Self-host or use the managed cloud.</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="icon"><i class="fas fa-code"></i></div>
+                        <h3>Open Source Core</h3>
+                        <p>Audit the code on <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" style="color: var(--accent);">GitHub</a>. MIT licensed. Self-host if you prefer full control.</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="icon"><i class="fas fa-plug"></i></div>
+                        <h3>Direct + Zapier</h3>
+                        <p>20 direct integrations for major platforms. 450+ more via Zapier for niche networks and custom workflows.</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Security-First Design</h3>
+                        <p>OAuth tokens only. No passwords stored. Tokens encrypted at rest. Working toward SOC 2 readiness.</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="icon"><i class="fas fa-pen-fancy"></i></div>
+                        <h3>Content Adaptation</h3>
+                        <p>Preview and customize each platform version. Adjust text, media, and formatting per destination.</p>
+                    </div>
+                    <div class="benefit">
+                        <div class="icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Delivery Analytics</h3>
+                        <p>Track status, failures, and performance across all connected channels. Export logs for audit.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-cta" id="cta">
+            <div class="container">
+                <div class="cta-box">
+                    <h2>Ready to Simplify Your Workflow?</h2>
+                    <p>
+                        <strong>FED-POSTER</strong> is a cross-posting tool for creators.<br />
+                        Try it free for 14 days. No risk. Cancel anytime.
+                    </p>
+                    <div class="actions">
+                        <a href="#ko-fi-section" class="btn btn-gold"><i class="fas fa-rocket"></i> Join Beta</a>
+                        <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> View on GitHub</a>
+                    </div>
+                    <div class="fine">
+                        <i class="fas fa-check-circle" style="color:var(--accent);"></i> No credit card required
+                        <span style="margin:0 8px;">·</span>
+                        <i class="fas fa-check-circle" style="color:var(--accent);"></i> 14-day free trial
+                        <span style="margin:0 8px;">·</span>
+                        <i class="fas fa-check-circle" style="color:var(--accent);"></i> Open source core
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── NEW KO-FI WIDGET SECTION ── -->
+        <section class="section-ko-fi" id="ko-fi-section">
+            <div class="container">
+                <div class="header">
+                    <h2>Support <span style="color: var(--accent);">FED-OS</span></h2>
+                    <p>Help us keep the project alive — your support means the world.</p>
+                </div>
+                <a href="https://ko-fi.com/fedpromptly" target="_blank" style="display: block; text-decoration: none;">
+                    <div class="ko-fi-wrapper">
+                        <iframe
+                            src="https://ko-fi.com/fedpromptly/?hidefeed=true&widget=true&embed=true&preview=true"
+                            allowtransparency="true"
+                            title="Support FED-OS on Ko-fi">
+                        </iframe>
+                        <div class="ko-fi-mask"></div>
+                    </div>
+                </a>
+            </div>
+        </section>
 
     </div>
 
-    <!-- ============================================ -->
-    <!-- FOOTER                                       -->
-    <!-- ============================================ -->
-    <footer class="border-t border-slate-200 dark:border-slate-800 py-12 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-2">
-                <span class="text-xl font-extrabold gradient-text">@Saas</span>
-                <span class="text-xs text-slate-500 dark:text-slate-400">— At Last, a SaaS Marketplace</span>
+    <footer>
+        <div class="container">
+            <div class="copy">
+                &copy; 2026 <strong>FED-POSTER</strong> by fedpromptly.com.
+                <span style="display:block;font-size:0.65rem;color:var(--text-muted);margin-top:2px;">
+                    Open source: <a href="https://github.com/FED-OS/Fed-Poster" target="_blank" style="color:var(--accent);">github.com/FED-OS/Fed-Poster</a>
+                </span>
             </div>
-            <div class="flex flex-wrap items-center gap-6 text-sm text-slate-600 dark:text-slate-400">
-                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">About</a>
-                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Terms</a>
-                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Privacy</a>
-                <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">GitHub</a>
-                <span class="text-xs">© 2026 @Saas</span>
+            <div class="socials">
+                <a href="https://x.com/Pokemonlegendsx" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/FED-OS/Fed-Poster" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.youtube.com/@FedjumperGaming" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="https://discord.gg/JBSE9wN2kA" target="_blank"><i class="fab fa-discord"></i></a>
             </div>
         </div>
     </footer>
 
-    <!-- ============================================ -->
-    <!-- JAVASCRIPT                                   -->
-    <!-- ============================================ -->
     <script>
-        // ---- Tab filtering (works as before) ----
-        (function() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const cards = document.querySelectorAll('.listing-card');
-            const resultSpan = document.getElementById('resultCount');
+        // ── Nav Toggle ──
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
 
-            function filterCards(category) {
-                let visible = 0;
-                cards.forEach(card => {
-                    const cardCat = card.dataset.category;
-                    if (category === 'all' || cardCat === category) {
-                        card.style.display = 'block';
-                        visible++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                resultSpan.textContent = visible + ' listings this week';
-            }
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('is-open');
+            navToggle.querySelector('i').className = navLinks.classList.contains('is-open') ?
+                'fas fa-times' : 'fas fa-bars';
+        });
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('tab-active'));
-                    this.classList.add('tab-active');
-                    const filter = this.dataset.filter || 'all';
-                    filterCards(filter);
-                });
-            });
-
-            filterCards('all');
-        })();
-
-        // ---- COMING SOON MODAL (for ALL clickable elements) ----
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('comingSoonModal');
-            const closeBtn = document.getElementById('modalCloseBtn');
-
-            // Function to show modal
-            function showComingSoon(e) {
-                e.preventDefault();
-                modal.classList.add('active');
-            }
-
-            // Close modal on button click
-            closeBtn.addEventListener('click', function() {
-                modal.classList.remove('active');
-            });
-
-            // Close modal on background click
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-
-            // Select all buttons, links, and interactive elements
-            const clickables = document.querySelectorAll('button, a, .tab-btn, .listing-card button, .modal-close, .px-8.py-3.border, .bg-indigo-600, .hover\\:bg-indigo-700');
-
-            // Attach click handler – but we must exclude the modal close button itself and tabs (they still filter)
-            clickables.forEach(el => {
-                // Skip the modal close button (we already handle it)
-                if (el.id === 'modalCloseBtn') return;
-                // Skip the tab buttons? We'll let them work but also show modal? 
-                // Actually we want all clicks to show modal. But we also want tab filtering to work.
-                // So we'll add a handler that shows modal after a tiny delay, but for tabs we want the filter to happen first.
-                // We'll let the click propagate, but we'll show modal for everything except the modal background.
-                el.addEventListener('click', function(e) {
-                    // If the clicked element is a tab, we already have a filter handler – we'll still show modal.
-                    // To avoid double modal, we can check if it's a tab and still show.
-                    // But we want to show the modal for all clicks. We'll show it after a micro delay so the filter runs first.
-                    setTimeout(() => {
-                        showComingSoon(e);
-                    }, 50);
-                });
-            });
-
-            // Also capture clicks on the "Load More" and other non-button interactive elements
-            const loadMore = document.querySelector('.px-8.py-3.border');
-            if (loadMore) {
-                loadMore.addEventListener('click', function(e) {
-                    setTimeout(() => {
-                        showComingSoon(e);
-                    }, 50);
-                });
-            }
-
-            // Also clicks on the nav buttons and hero buttons
-            const heroButtons = document.querySelectorAll('.bg-indigo-600, .bg-white.dark\\:bg-slate-800');
-            heroButtons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    setTimeout(() => {
-                        showComingSoon(e);
-                    }, 50);
-                });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('is-open');
+                navToggle.querySelector('i').className = 'fas fa-bars';
             });
         });
+
+        // ── Smooth scroll for all internal links ──
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ── Carousel ──
+        (function initCarousel() {
+            const track = document.getElementById('carouselTrack');
+            if (!track) return;
+
+            const cards = [{
+                icon: 'fa-plug',
+                title: '1. Connect Accounts',
+                desc: 'Connect your social accounts, pages, and channels. OAuth only — we never see your password.',
+                chips: ['OAuth', 'Secure']
+            }, {
+                icon: 'fa-pen-fancy',
+                title: '2. Create Campaign',
+                desc: 'Write your master post. Review platform-specific previews and adjust text, media, or formatting per destination.',
+                chips: ['Preview', 'Adapt']
+            }, {
+                icon: 'fa-calendar-check',
+                title: '3. Schedule & Publish',
+                desc: 'Set publish times or post immediately. Monitor delivery status across all platforms.',
+                chips: ['Schedule', 'Track']
+            }, {
+                icon: 'fa-chart-simple',
+                title: '4. Analyze Performance',
+                desc: 'Track reach, engagement, and delivery status. Export logs and reports for audit.',
+                chips: ['Analytics', 'Export']
+            }, {
+                icon: 'fa-rotate',
+                title: 'Zapier Extension',
+                desc: 'Extend to 450+ niche platforms using your own Zapier account. One post can trigger unlimited automations.',
+                chips: ['Zapier', '450+']
+            }, {
+                icon: 'fa-code',
+                title: 'Self-Host Option',
+                desc: 'Deploy the open source core on your own infrastructure. Full control over your data and tokens.',
+                chips: ['Open Source', 'MIT']
+            }];
+
+            function buildCard(card) {
+                const chipsHtml = card.chips.map(chip =>
+                    `<span><i class="fas fa-check-circle"></i> ${chip}</span>`
+                ).join('');
+                return `
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas ${card.icon}"></i></div>
+                                <h3>${card.title}</h3>
+                                <p>${card.desc}</p>
+                                <div class="chips">${chipsHtml}</div>
+                                <a href="#pricing" class="btn-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        `;
+            }
+
+            let allCardsHtml = '';
+            for (let i = 0; i < 2; i++) {
+                cards.forEach(card => {
+                    allCardsHtml += buildCard(card);
+                });
+            }
+            track.innerHTML = allCardsHtml;
+
+            if (cards.length < 2) return;
+            const duration = cards.length * 4.5;
+            track.style.animationDuration = duration + 's';
+
+            track.addEventListener('mouseenter', () => {
+                track.style.animationPlayState = 'paused';
+            });
+            track.addEventListener('mouseleave', () => {
+                track.style.animationPlayState = 'running';
+            });
+        })();
+
+        console.log('🚀 FED-POSTER · Open source multi-channel publishing · Beta launch');
     </script>
 
 </body>
